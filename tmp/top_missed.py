@@ -14,7 +14,7 @@ with p.open(encoding='utf-8') as f:
     for row in r:
         lm = int(row.get('LINE_MISSED') or 0)
         lc = int(row.get('LINE_COVERED') or 0)
-        if lm>0:
+        if lm > 0:
             rows.append((lm, row.get('PACKAGE'), row.get('CLASS'), lc))
 rows.sort(reverse=True)
 print('Top 10 classes by missed lines:')
