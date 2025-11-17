@@ -1,0 +1,22 @@
+JaCoCo coverage summary
+======================
+
+Location: codebase/target/site/jacoco
+
+Total lines: 12024
+Line coverage: 93.50% (11243 covered, 781 missed)
+Methods covered: 2319, missed: 156
+
+Top classes with missing lines:
+- org.apache.commons.lang3.reflect.TypeUtils: lines missed=190, covered=109
+- org.apache.commons.lang3.builder.ToStringStyle: lines missed=42, covered=440
+- org.apache.commons.lang3.builder.StandardToStringStyle: lines missed=39, covered=23
+- org.apache.commons.lang3.builder.EqualsBuilder: lines missed=39, covered=223
+- org.apache.commons.lang3.builder.ToStringBuilder: lines missed=38, covered=94
+- org.apache.commons.lang3.text.ExtendedMessageFormat: lines missed=35, covered=151
+- org.apache.commons.lang3.Conversion: lines missed=32, covered=489
+- org.apache.commons.lang3.builder.CompareToBuilder: lines missed=22, covered=234
+- org.apache.commons.lang3.AnnotationUtils: lines missed=21, covered=93
+- org.apache.commons.lang3.StringUtils: lines missed=21, covered=1348
+
+See the full CSV at: codebase/target/site/jacoco/jacoco.csv

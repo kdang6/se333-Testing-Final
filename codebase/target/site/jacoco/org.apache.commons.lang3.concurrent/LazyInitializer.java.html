@@ -97,7 +97,7 @@ package org.apache.commons.lang3.concurrent;
 <span class="fc bfc" id="L97" title="All 2 branches covered.">        if (result == null) {</span>
 <span class="fc" id="L98">            synchronized (this) {</span>
 <span class="fc" id="L99">                result = object;</span>
-<span class="fc bfc" id="L100" title="All 2 branches covered.">                if (result == null) {</span>
+<span class="pc bpc" id="L100" title="1 of 2 branches missed.">                if (result == null) {</span>
 <span class="fc" id="L101">                    object = result = initialize();</span>
                 }
 <span class="fc" id="L103">            }</span>

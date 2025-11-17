@@ -129,6 +129,11 @@ public enum JavaVersion {
      * version is unknown
      */
     static JavaVersion get(final String nom) {
+        if (nom == null) {
+            return null;
+        }
+
+        // Handle legacy '1.x' style versions and modern numeric versions like '9', '11', '17' or '17.0.16'
         if ("0.9".equals(nom)) {
             return JAVA_0_9;
         } else if ("1.1".equals(nom)) {
@@ -148,6 +153,17 @@ public enum JavaVersion {
         } else if ("1.8".equals(nom)) {
             return JAVA_1_8;
         } else {
+            // Try to handle modern version strings like "9", "11", "17" or "17.0.16"
+            try {
+                String majorStr = nom.split("\\.")[0];
+                int major = Integer.parseInt(majorStr);
+                if (major >= 9) {
+                    // Treat Java 9+ as at least Java 1.8 for legacy comparison purposes
+                    return JAVA_1_8;
+                }
+            } catch (final Exception e) {
+                // ignore and fall through to return null
+            }
             return null;
         }
     }
