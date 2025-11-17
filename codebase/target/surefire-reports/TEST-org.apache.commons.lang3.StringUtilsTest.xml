@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="99" failures="0" name="org.apache.commons.lang3.StringUtilsTest" time="0.016" errors="0" skipped="0">
+<testsuite tests="99" failures="0" name="org.apache.commons.lang3.StringUtilsTest" time="0.023" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -76,13 +76,13 @@
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testLengthStringBuffer" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testNormalizeSpace" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testJoin_ArrayOfInts" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testDifferenceAt_StringArray" time="0"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testDifferenceAt_StringArray" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testRepeat_StringStringInt" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testOverlay_StringStringIntInt" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testDefaultIfBlank_StringString" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testJoin_ArrayString" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testReplacePattern" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testPrependIfMissing" time="0"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testPrependIfMissing" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testIsAllLowerCase" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testLANG666" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testReverseDelimited_StringChar" time="0"/>
@@ -90,7 +90,7 @@
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testChomp" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testEMPTY" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testChop" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testToString" time="0.004"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testToString" time="0.002"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testJoin_IterableString" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testDefaultIfEmpty_CharBuffers" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testSplitPreserveAllTokens_StringString_StringStringInt" time="0.008"/>
@@ -119,20 +119,20 @@
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testSplit_String" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testLengthString" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testDefault_String" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testLeftPad_StringIntChar" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testLeftPad_StringIntChar" time="0.003"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testRepeat_StringInt" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testAbbreviate_StringInt" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testDefaultIfBlank_StringBuilders" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testDefault_StringString" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testLengthStringBuilder" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testJoin_IteratorString" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testRightPad_StringIntChar" time="0"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testRightPad_StringIntChar" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testJoin_ArrayOfDoubles" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testGetLevenshteinDistance_StringString" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testJoin_Objectarray" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testAbbreviate_StringIntInt" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testReplace_StringStringArrayStringArray" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testEscapeSurrogatePairsLang858" time="0"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testEscapeSurrogatePairsLang858" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testSplitPreserveAllTokens_String" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testReplaceOnce_StringStringString" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testStringUtilsCharSequenceContract" time="0"/>
@@ -147,13 +147,13 @@
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testDifference_StringString" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testLeftPad_StringInt" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testDefaultIfBlank_CharBuffers" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testPrependIfMissingIgnoreCase" time="0"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testPrependIfMissingIgnoreCase" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testReplace_StringStringArrayStringArrayBoolean" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testSplit_StringChar" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testRightPad_StringIntString" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testSwapCase_String" time="0.003"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testSwapCase_String" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testRemoveStartIgnoreCase" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testSplit_StringString_StringStringInt" time="0"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testSplit_StringString_StringStringInt" time="0.004"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testJoin_ArrayOfBytes" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testJoin_ArrayOfChars" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsTest" name="testJoin_ArrayOfLongs" time="0"/>

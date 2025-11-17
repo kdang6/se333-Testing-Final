@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="15" failures="0" name="org.apache.commons.lang3.time.DurationFormatUtilsTest" time="0.225" errors="0" skipped="0">
+<testsuite tests="15" failures="0" name="org.apache.commons.lang3.time.DurationFormatUtilsTest" time="0.297" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -65,11 +65,11 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.time.DurationFormatUtilsTest" name="testDurationsByBruteForce" time="0.065"/>
+  <testcase classname="org.apache.commons.lang3.time.DurationFormatUtilsTest" name="testDurationsByBruteForce" time="0.081"/>
   <testcase classname="org.apache.commons.lang3.time.DurationFormatUtilsTest" name="testFormatPeriod" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DurationFormatUtilsTest" name="testLANG815" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DurationFormatUtilsTest" name="testLowDurations" time="0.16"/>
-  <testcase classname="org.apache.commons.lang3.time.DurationFormatUtilsTest" name="testLexx" time="0"/>
+  <testcase classname="org.apache.commons.lang3.time.DurationFormatUtilsTest" name="testLowDurations" time="0.215"/>
+  <testcase classname="org.apache.commons.lang3.time.DurationFormatUtilsTest" name="testLexx" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.time.DurationFormatUtilsTest" name="testFormatDurationHMS" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DurationFormatUtilsTest" name="testFormatDurationISO" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DurationFormatUtilsTest" name="testFormatPeriodISO" time="0"/>

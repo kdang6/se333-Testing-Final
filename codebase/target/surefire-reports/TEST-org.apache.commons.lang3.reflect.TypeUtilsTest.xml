@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="11" failures="0" name="org.apache.commons.lang3.reflect.TypeUtilsTest" time="0.032" errors="6" skipped="0">
+<testsuite tests="11" failures="0" name="org.apache.commons.lang3.reflect.TypeUtilsTest" time="0.034" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -65,82 +65,15 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testGetTypeArguments" time="0.002">
-    <error message="Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null
-	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
-	at org.apache.commons.lang3.ClassUtils.isAssignable(ClassUtils.java:586)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:131)
-	at org.apache.commons.lang3.reflect.TypeUtils.getTypeArguments(TypeUtils.java:653)
-	at org.apache.commons.lang3.reflect.TypeUtils.getTypeArguments(TypeUtils.java:548)
-	at org.apache.commons.lang3.reflect.TypeUtils.getTypeArguments(TypeUtils.java:534)
-	at org.apache.commons.lang3.reflect.TypeUtilsTest.testGetTypeArguments(TypeUtilsTest.java:477)
-</error>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testIsInstance" time="0">
-    <error message="Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null
-	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
-	at org.apache.commons.lang3.ClassUtils.isAssignable(ClassUtils.java:586)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:131)
-	at org.apache.commons.lang3.reflect.TypeUtils.getTypeArguments(TypeUtils.java:653)
-	at org.apache.commons.lang3.reflect.TypeUtils.getTypeArguments(TypeUtils.java:548)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:200)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:84)
-	at org.apache.commons.lang3.reflect.TypeUtils.isInstance(TypeUtils.java:851)
-	at org.apache.commons.lang3.reflect.TypeUtilsTest.testIsInstance(TypeUtilsTest.java:466)
-</error>
-  </testcase>
+  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testGetTypeArguments" time="0.006"/>
+  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testIsInstance" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testLang820" time="0"/>
-  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testIsAssignable" time="0.021">
-    <error message="Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null
-	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
-	at org.apache.commons.lang3.ClassUtils.isAssignable(ClassUtils.java:586)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:131)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:80)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:397)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:92)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:228)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:84)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:65)
-	at org.apache.commons.lang3.reflect.TypeUtilsTest.delegateBooleanAssertion(TypeUtilsTest.java:447)
-	at org.apache.commons.lang3.reflect.TypeUtilsTest.testIsAssignable(TypeUtilsTest.java:170)
-</error>
-  </testcase>
+  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testIsAssignable" time="0.026"/>
   <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testGetPrimitiveArrayComponentType" time="0"/>
-  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testTypesSatisfyVariables" time="0">
-    <error message="Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null
-	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
-	at org.apache.commons.lang3.ClassUtils.isAssignable(ClassUtils.java:586)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:131)
-	at org.apache.commons.lang3.reflect.TypeUtils.getTypeArguments(TypeUtils.java:653)
-	at org.apache.commons.lang3.reflect.TypeUtils.getTypeArguments(TypeUtils.java:548)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:200)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:84)
-	at org.apache.commons.lang3.reflect.TypeUtils.typesSatisfyVariables(TypeUtils.java:968)
-	at org.apache.commons.lang3.reflect.TypeUtilsTest.testTypesSatisfyVariables(TypeUtilsTest.java:526)
-</error>
-  </testcase>
+  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testTypesSatisfyVariables" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testIsArrayTypeClasses" time="0"/>
-  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testDetermineTypeVariableAssignments" time="0">
-    <error message="Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null
-	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
-	at org.apache.commons.lang3.ClassUtils.isAssignable(ClassUtils.java:586)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:131)
-	at org.apache.commons.lang3.reflect.TypeUtils.determineTypeArguments(TypeUtils.java:715)
-	at org.apache.commons.lang3.reflect.TypeUtilsTest.testDetermineTypeVariableAssignments(TypeUtilsTest.java:540)
-</error>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testGetRawType" time="0">
-    <error message="Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null
-	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
-	at org.apache.commons.lang3.ClassUtils.isAssignable(ClassUtils.java:586)
-	at org.apache.commons.lang3.reflect.TypeUtils.isAssignable(TypeUtils.java:131)
-	at org.apache.commons.lang3.reflect.TypeUtils.getTypeArguments(TypeUtils.java:653)
-	at org.apache.commons.lang3.reflect.TypeUtils.getTypeArguments(TypeUtils.java:548)
-	at org.apache.commons.lang3.reflect.TypeUtils.getTypeArguments(TypeUtils.java:534)
-	at org.apache.commons.lang3.reflect.TypeUtils.getRawType(TypeUtils.java:1039)
-	at org.apache.commons.lang3.reflect.TypeUtilsTest.testGetRawType(TypeUtilsTest.java:561)
-</error>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testGetArrayComponentType" time="0.009"/>
+  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testDetermineTypeVariableAssignments" time="0"/>
+  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testGetRawType" time="0.002"/>
+  <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testGetArrayComponentType" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.TypeUtilsTest" name="testIsArrayGenericTypes" time="0"/>
 </testsuite>

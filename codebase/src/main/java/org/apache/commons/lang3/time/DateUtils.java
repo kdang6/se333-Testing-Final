@@ -382,9 +382,40 @@ public class DateUtils {
                 str2 = str.replaceAll("([-+][0-9][0-9]):([0-9][0-9])$", "$1$2"); 
             }
 
-            final Date date = parser.parse(str2, pos);
+            Date date = parser.parse(str2, pos);
             if (date != null && pos.getIndex() == str2.length()) {
                 return date;
+            }
+
+            // Some locales use weekday abbreviations that include a trailing dot
+            // (for example "Mi." for German Wednesday). Try a tolerant parse by
+            // adding or removing a dot after the weekday token before the comma.
+            // Only attempt this if the pattern contains a weekday token 'EEE' and
+            // the input contains a comma following the weekday.
+            if (parsePattern.contains("EEE")) {
+                final int commaIdx = str2.indexOf(',');
+                if (commaIdx > 0) {
+                    final String firstToken = str2.substring(0, commaIdx);
+                    final String rest = str2.substring(commaIdx);
+                    // Try adding a dot if not present (e.g. "Mi" -> "Mi.")
+                    if (!firstToken.endsWith(".")) {
+                        final String alt = firstToken + "." + rest;
+                        pos.setIndex(0);
+                        date = parser.parse(alt, pos);
+                        if (date != null && pos.getIndex() == alt.length()) {
+                            return date;
+                        }
+                    }
+                    // Try removing a dot if present (e.g. "Mi." -> "Mi")
+                    if (firstToken.endsWith(".")) {
+                        final String stripped = firstToken.substring(0, firstToken.length() - 1) + rest;
+                        pos.setIndex(0);
+                        date = parser.parse(stripped, pos);
+                        if (date != null && pos.getIndex() == stripped.length()) {
+                            return date;
+                        }
+                    }
+                }
             }
         }
         throw new ParseException("Unable to parse the date: " + str, -1);

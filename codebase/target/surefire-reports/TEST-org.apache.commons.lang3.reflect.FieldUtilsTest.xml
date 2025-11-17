@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="44" failures="2" name="org.apache.commons.lang3.reflect.FieldUtilsTest" time="0.016" errors="0" skipped="0">
+<testsuite tests="44" failures="0" name="org.apache.commons.lang3.reflect.FieldUtilsTest" time="0.022" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -65,40 +65,31 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadStaticFieldForceAccess" time="0.003"/>
-  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetAllFieldsList" time="0">
-    <failure message="expected:&lt;5&gt; but was:&lt;7&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;5&gt; but was:&lt;7&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.reflect.FieldUtilsTest.testGetAllFieldsList(FieldUtilsTest.java:167)
-</failure>
-  </testcase>
+  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadStaticFieldForceAccess" time="0.002"/>
+  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetAllFieldsList" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadDeclaredNamedField" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadNamedStaticField" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadDeclaredNamedStaticFieldForceAccess" time="0"/>
-  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadDeclaredNamedFieldForceAccess" time="0"/>
+  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadDeclaredNamedFieldForceAccess" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetField" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetFieldIllegalArgumentException1" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetFieldIllegalArgumentException2" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadDeclaredNamedStaticField" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testWriteField" time="0"/>
-  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testWriteNamedStaticFieldForceAccess" time="0.003"/>
+  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testWriteNamedStaticFieldForceAccess" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetDeclaredFieldForceAccessIllegalArgumentException1" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetDeclaredFieldForceAccessIllegalArgumentException2" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testWriteFieldForceAccess" time="0"/>
-  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testAmbig" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testAmbig" time="0.002"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadStaticFieldForceAccessIllegalArgumentException1" time="0"/>
-  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadStaticFieldForceAccessIllegalArgumentException2" time="0.009"/>
+  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadStaticFieldForceAccessIllegalArgumentException2" time="0.014"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testWriteNamedField" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testWriteDeclaredNamedFieldForceAccess" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testWriteDeclaredNamedStaticField" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadNamedField" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadStaticFieldIllegalArgumentException1" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadStaticFieldIllegalArgumentException2" time="0"/>
-  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetFieldForceAccess" time="0"/>
+  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetFieldForceAccess" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadField" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testWriteNamedStaticField" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testWriteStaticFieldForceAccess" time="0"/>
@@ -107,16 +98,7 @@
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetFieldForceAccessIllegalArgumentException2" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testWriteNamedFieldForceAccess" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadNamedStaticFieldForceAccess" time="0"/>
-  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetAllFields" time="0">
-    <failure message="expected:&lt;5&gt; but was:&lt;7&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;5&gt; but was:&lt;7&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.reflect.FieldUtilsTest.testGetAllFields(FieldUtilsTest.java:147)
-</failure>
-  </testcase>
+  <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetAllFields" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testReadStaticField" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetDeclaredFieldAccessIllegalArgumentException1" time="0"/>
   <testcase classname="org.apache.commons.lang3.reflect.FieldUtilsTest" name="testGetDeclaredFieldAccessIllegalArgumentException2" time="0"/>

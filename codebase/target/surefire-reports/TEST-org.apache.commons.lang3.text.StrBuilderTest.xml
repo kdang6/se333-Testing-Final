@@ -65,9 +65,9 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testAsTokenizer" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testAsTokenizer" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testDeleteFirst_StrMatcher" time="0"/>
-  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testReplaceFirst_StrMatcher_String" time="0"/>
+  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testReplaceFirst_StrMatcher_String" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testDeleteAll_String" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testEndsWith" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testGetSetNullText" time="0"/>
@@ -76,7 +76,7 @@
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testGetChars" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testLastIndexOf_String" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testDeleteAll_char" time="0"/>
-  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testReplace_StrMatcher_String_int_int_int_VaryEndIndex" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testReplace_StrMatcher_String_int_int_int_VaryEndIndex" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testLastIndexOf_char_int" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testClear" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testSize" time="0"/>
@@ -90,10 +90,10 @@
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testContains_String" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testEqualsIgnoreCase" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testCapacityAndLength" time="0"/>
-  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testAsReader" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testAsReader" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testToStringBuilder" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testReplaceAll_String_String" time="0"/>
-  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testAsWriter" time="0"/>
+  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testAsWriter" time="0.002"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testLang294" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testLang295" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testReplaceAll_char_char" time="0"/>
@@ -111,7 +111,7 @@
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testIndexOf_StrMatcher_int" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testEnsureCapacity" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testLang412Right" time="0"/>
-  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testDeleteFirst_String" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testDeleteFirst_String" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testMidString" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testReplaceAll_StrMatcher_String" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testCapacity" time="0"/>
@@ -133,7 +133,7 @@
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testDeleteFirst_char" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testDeleteAll_StrMatcher" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testIsEmpty" time="0"/>
-  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testToCharArrayIntInt" time="0"/>
+  <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testToCharArrayIntInt" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testGetSetNewLineText" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testToStringBuffer" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrBuilderTest" name="testAsBuilder" time="0"/>

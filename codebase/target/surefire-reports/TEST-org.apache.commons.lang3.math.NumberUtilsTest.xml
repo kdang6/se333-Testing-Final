@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="82" failures="0" name="org.apache.commons.lang3.math.NumberUtilsTest" time="0.005" errors="1" skipped="0">
+<testsuite tests="82" failures="1" name="org.apache.commons.lang3.math.NumberUtilsTest" time="0.015" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -71,16 +71,16 @@
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinimumFloat" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinimumShort" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinLong_nullArray" time="0"/>
-  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testCreateNumber" time="0"/>
+  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testCreateNumber" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testToLongString" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxByte_emptyArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testToIntStringI" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxShort_nullArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testToIntString" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinShort_emptyArray" time="0"/>
-  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testCreateFloat" time="0.005"/>
+  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testCreateFloat" time="0.002"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxShort_emptyArray" time="0"/>
-  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinimumInt" time="0"/>
+  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinimumInt" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinDouble_nullArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxDouble_nullArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxDouble_emptyArray" time="0"/>
@@ -102,17 +102,17 @@
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxLong_nullArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testIsDigits" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinByte_nullArray" time="0"/>
-  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testCreateBigDecimal" time="0"/>
+  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testCreateBigDecimal" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testConstants" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testCompareDouble" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinimumByte" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinimumLong" time="0"/>
-  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testIsNumber" time="0"/>
+  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testIsNumber" time="0.002"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinDouble" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxByte" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxLong" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxFloat_nullArray" time="0"/>
-  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testCreateBigInteger" time="0"/>
+  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testCreateBigInteger" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testCreateLong" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinByte" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinLong" time="0"/>
@@ -126,18 +126,16 @@
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxFloat" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxShort" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testCompareFloat" time="0"/>
-  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="TestLang747" time="0">
-    <error message="For input string: &quot;80000000&quot; under radix 16" type="java.lang.NumberFormatException">java.lang.NumberFormatException: For input string: &quot;80000000&quot; under radix 16
-	at java.base/java.lang.NumberFormatException.forInputString(NumberFormatException.java:67)
-	at java.base/java.lang.Integer.parseInt(Integer.java:668)
-	at java.base/java.lang.Integer.valueOf(Integer.java:973)
-	at java.base/java.lang.Integer.decode(Integer.java:1458)
-	at org.apache.commons.lang3.math.NumberUtils.createInteger(NumberUtils.java:684)
-	at org.apache.commons.lang3.math.NumberUtils.createNumber(NumberUtils.java:474)
-	at org.apache.commons.lang3.math.NumberUtilsTest.TestLang747(NumberUtilsTest.java:256)
-</error>
+  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="TestLang747" time="0.006">
+    <failure message="expected: java.lang.Integer&lt;2147483647&gt; but was: java.lang.Long&lt;2147483647&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected: java.lang.Integer&lt;2147483647&gt; but was: java.lang.Long&lt;2147483647&gt;
+	at org.junit.Assert.fail(Assert.java:88)
+	at org.junit.Assert.failNotEquals(Assert.java:743)
+	at org.junit.Assert.assertEquals(Assert.java:118)
+	at org.junit.Assert.assertEquals(Assert.java:144)
+	at org.apache.commons.lang3.math.NumberUtilsTest.TestLang747(NumberUtilsTest.java:261)
+</failure>
   </testcase>
-  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinInt_emptyArray" time="0"/>
+  <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinInt_emptyArray" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinByte_emptyArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMaxInt" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.NumberUtilsTest" name="testMinInt" time="0"/>

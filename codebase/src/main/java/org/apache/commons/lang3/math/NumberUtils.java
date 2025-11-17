@@ -471,6 +471,15 @@ public class NumberUtils {
             if (hexDigits > 8) { // too many for an int
                 return createLong(str);
             }
+            if (hexDigits == 8) {
+                // 8 hex digits may overflow Integer if the high bit is set (e.g. 0x80000000).
+                // Try to create an Integer first and fall back to Long on overflow.
+                try {
+                    return createInteger(str);
+                } catch (final NumberFormatException ex) {
+                    return createLong(str);
+                }
+            }
             return createInteger(str);
         }
         final char lastChar = str.charAt(str.length() - 1);

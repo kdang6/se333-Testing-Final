@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="38" failures="12" name="org.apache.commons.lang3.time.DateUtilsTest" time="0.055" errors="5" skipped="0">
+<testsuite tests="38" failures="0" name="org.apache.commons.lang3.time.DateUtilsTest" time="0.04" errors="2" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -65,13 +65,13 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testParseDateWithLeniency" time="0"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testParseDateWithLeniency" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddMinutes" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testMonthIterator" time="0.01"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testRoundLang346" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testLANG799_DE_OK" time="0.006">
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testMonthIterator" time="0.002"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testRoundLang346" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testLANG799_DE_OK" time="0.017">
     <error message="Unable to parse the date: Mi, 09 Apr 2008 23:55:38 GMT" type="java.text.ParseException">java.text.ParseException: Unable to parse the date: Mi, 09 Apr 2008 23:55:38 GMT
-	at org.apache.commons.lang3.time.DateUtils.parseDateWithLeniency(DateUtils.java:390)
+	at org.apache.commons.lang3.time.DateUtils.parseDateWithLeniency(DateUtils.java:421)
 	at org.apache.commons.lang3.time.DateUtils.parseDate(DateUtils.java:290)
 	at org.apache.commons.lang3.time.DateUtils.parseDate(DateUtils.java:267)
 	at org.apache.commons.lang3.time.DateUtilsTest.testLANG799_DE_OK(DateUtilsTest.java:1598)
@@ -79,176 +79,41 @@
   </testcase>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testLANG799_EN_OK" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetMilliseconds" time="0.001"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testTruncate" time="0.003"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testTruncate" time="0.002"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testIsSameLocalTime_Cal" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddDays" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testLANG799_EN_WITH_DE_LOCALE" time="0">
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testLANG799_EN_WITH_DE_LOCALE" time="0.002">
     <error message="Unable to parse the date: Mi, 09 Apr 2008 23:55:38 GMT" type="java.text.ParseException">java.text.ParseException: Unable to parse the date: Mi, 09 Apr 2008 23:55:38 GMT
-	at org.apache.commons.lang3.time.DateUtils.parseDateWithLeniency(DateUtils.java:390)
+	at org.apache.commons.lang3.time.DateUtils.parseDateWithLeniency(DateUtils.java:421)
 	at org.apache.commons.lang3.time.DateUtils.parseDate(DateUtils.java:290)
 	at org.apache.commons.lang3.time.DateUtilsTest.testLANG799_EN_WITH_DE_LOCALE(DateUtilsTest.java:1623)
 </error>
   </testcase>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testRound" time="0.01">
-    <error message="Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null
-	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
-	at org.apache.commons.lang3.time.DateUtilsTest.testRound(DateUtilsTest.java:848)
-</error>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testParseDate" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testCeil" time="0.005">
-    <error message="Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null
-	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
-	at org.apache.commons.lang3.time.DateUtilsTest.testCeil(DateUtilsTest.java:1427)
-</error>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddSeconds" time="0.001">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testAddSeconds(DateUtilsTest.java:439)
-</failure>
-  </testcase>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testRound" time="0.002"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testParseDate" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testCeil" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddSeconds" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testLANG799_EN_FAIL" time="0.001"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetMinutes" time="0.002">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testSetMinutes(DateUtilsTest.java:565)
-</failure>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testToCalendar" time="0.001"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddHours" time="0">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testAddHours(DateUtilsTest.java:399)
-</failure>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddWeeks" time="0">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testAddWeeks(DateUtilsTest.java:359)
-</failure>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddYears" time="0">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testAddYears(DateUtilsTest.java:319)
-</failure>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testTruncateLang59" time="0">
-    <error message="Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null" type="java.lang.NullPointerException">java.lang.NullPointerException: Cannot invoke &quot;org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)&quot; because &quot;org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM&quot; is null
-	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
-	at org.apache.commons.lang3.time.DateUtilsTest.testTruncateLang59(DateUtilsTest.java:1137)
-</error>
-  </testcase>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetMinutes" time="0"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testToCalendar" time="0"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddHours" time="0"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddWeeks" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddYears" time="0"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testTruncateLang59" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testIsSameInstant_Date" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testLang530" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetSeconds" time="0">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testSetSeconds(DateUtilsTest.java:587)
-</failure>
-  </testcase>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testLang530" time="0.002"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetSeconds" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testIsSameInstant_Cal" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddMonths" time="0">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testAddMonths(DateUtilsTest.java:339)
-</failure>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testWeekIterator" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetMonths" time="0.01">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testSetMonths(DateUtilsTest.java:499)
-</failure>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetDays" time="0">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testSetDays(DateUtilsTest.java:521)
-</failure>
-  </testcase>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddMonths" time="0"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testWeekIterator" time="0.002"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetMonths" time="0"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetDays" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testIsSameDay_Date" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testIsSameDay_Cal" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testIteratorEx" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddMilliseconds" time="0">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testAddMilliseconds(DateUtilsTest.java:459)
-</failure>
-  </testcase>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testAddMilliseconds" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testConstructor" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetHours" time="0">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testSetHours(DateUtilsTest.java:543)
-</failure>
-  </testcase>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetYears" time="0.005">
-    <failure message="expected:&lt;4&gt; but was:&lt;11&gt;" type="java.lang.AssertionError">java.lang.AssertionError: expected:&lt;4&gt; but was:&lt;11&gt;
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:555)
-	at org.junit.Assert.assertEquals(Assert.java:542)
-	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
-	at org.apache.commons.lang3.time.DateUtilsTest.testSetYears(DateUtilsTest.java:479)
-</failure>
-  </testcase>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetHours" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testSetYears" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsTest" name="testLANG799_DE_FAIL" time="0"/>
 </testsuite>

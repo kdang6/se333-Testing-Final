@@ -65,7 +65,7 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMinutesOfHourWithCalendar" time="0.002"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMinutesOfHourWithCalendar" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testHoursOfMonthWithDate" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testSecondsOfYearWithDate" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMinuteFragmentInLargerUnitWithCalendar" time="0"/>
@@ -106,7 +106,7 @@
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testNullCalendar" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMinutesOfDayWithCalendar" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMillisecondsOfHourWithDate" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testSecondsOfMonthWithCalendar" time="0"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testSecondsOfMonthWithCalendar" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testSecondFragmentInLargerUnitWithCalendar" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMinutesOfYearWithCalendar" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMillisecondsOfMinuteWithCalender" time="0"/>

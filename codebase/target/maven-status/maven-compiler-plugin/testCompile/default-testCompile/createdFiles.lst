@@ -4,6 +4,7 @@ org\apache\commons\lang3\exception\ExceptionUtilsTest$ExceptionWithoutCause.clas
 org\apache\commons\lang3\concurrent\TimedSemaphoreTest.class
 org\apache\commons\lang3\text\StrTokenizerTest.class
 org\apache\commons\lang3\builder\ToStringStyleConcurrencyTest.class
+org\apache\commons\lang3\reflect\TypeUtilsAddedTest.class
 org\apache\commons\lang3\time\FastDateFormatTest$2.class
 org\apache\commons\lang3\reflect\MethodUtilsTest.class
 org\apache\commons\lang3\text\ExtendedMessageFormatTest$LowerCaseFormat.class
@@ -39,6 +40,7 @@ org\apache\commons\lang3\builder\HashCodeBuilderTest.class
 org\apache\commons\lang3\ClassUtilsTest$4Named.class
 org\apache\commons\lang3\concurrent\BackgroundInitializerTest$BackgroundInitializerTestImpl.class
 org\apache\commons\lang3\builder\ReflectionToStringBuilderConcurrencyTest$1.class
+org\apache\commons\lang3\builder\ToStringStyleAddedTest.class
 org\apache\commons\lang3\reflect\AClass$GClass.class
 org\apache\commons\lang3\text\StrBuilderAppendInsertTest$3.class
 org\apache\commons\lang3\builder\CompareToBuilderTest$TestSubObject.class
@@ -298,6 +300,7 @@ org\apache\commons\lang3\builder\MultiLineToStringStyleTest.class
 org\apache\commons\lang3\reflect\AClass.class
 org\apache\commons\lang3\event\EventUtilsTest$1.class
 org\apache\commons\lang3\CharRangeTest.class
+org\apache\commons\lang3\builder\ToStringBuilderAddedTest.class
 org\apache\commons\lang3\reflect\testbed\Parent.class
 org\apache\commons\lang3\AnnotationUtilsTest.class
 org\apache\commons\lang3\text\StrBuilderAppendInsertTest.class
