@@ -17,6 +17,7 @@
 package org.apache.commons.lang3;
 
 import org.apache.commons.lang3.math.NumberUtils;
+import java.util.Objects;
 
 /**
  * <p>Operations on boolean primitives and Boolean objects.</p>
@@ -549,7 +550,7 @@ public class BooleanUtils {
         // Optimisation provides same performance as before for interned 'true'.
         // Similar performance for null, 'false', and other strings not length 2/3/4.
         // 'true'/'TRUE' match 4 times slower, 'tRUE'/'True' 7 times slower.
-        if (str == "true") {
+        if ("true".equals(str)) {
             return Boolean.TRUE;
         }
         if (str == null) {
@@ -721,9 +722,9 @@ public class BooleanUtils {
      * @throws IllegalArgumentException if the String doesn't match
      */
     public static boolean toBoolean(final String str, final String trueString, final String falseString) {
-        if (str == trueString) {
+        if (Objects.equals(str, trueString)) {
             return true;
-        } else if (str == falseString) {
+        } else if (Objects.equals(str, falseString)) {
             return false;
         } else if (str != null) {
             if (str.equals(trueString)) {

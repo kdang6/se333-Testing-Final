@@ -1034,6 +1034,213 @@ def git_pull_request(
         }
 
 
+#Phase 5: AI Code Review Agent
+
+
+@mcp.tool()
+def run_spotbugs_analysis(project_path: str) -> dict:
+    """
+    Run SpotBugs static analysis to detect potential bugs.
+    """
+
+    try:
+        # Run SpotBugs via Maven
+        result = subprocess.run(
+            ["mvn", "clean", "compile", "spotbugs:spotbugs"],
+            cwd=project_path,
+            capture_output=True,
+            text=True,
+            timeout=600
+        )
+        
+        # Parse SpotBugs XML report
+        spotbugs_xml = Path(project_path) / "target/spotbugsXml.xml"
+        
+        if not spotbugs_xml.exists():
+            return {
+                "success": False,
+                "error": "SpotBugs report not found. Ensure SpotBugs plugin is configured in pom.xml",
+                "hint": "Add spotbugs-maven-plugin to your pom.xml"
+            }
+        
+        tree = ET.parse(spotbugs_xml)
+        root = tree.getroot()
+        
+        findings = []
+        for bug_instance in root.findall(".//BugInstance"):
+            bug = {
+                "type": bug_instance.get("type"),
+                "priority": bug_instance.get("priority"),
+                "category": bug_instance.get("category"),
+                "message": bug_instance.find("LongMessage").text if bug_instance.find("LongMessage") is not None else "No message",
+                "file": None,
+                "line": None
+            }
+            
+            # Get source location
+            source_line = bug_instance.find(".//SourceLine")
+            if source_line is not None:
+                bug["file"] = source_line.get("sourcepath")
+                bug["line"] = source_line.get("start")
+            
+            findings.append(bug)
+        
+        # Categorize by priority
+        high_priority = [f for f in findings if f["priority"] == "1"]
+        medium_priority = [f for f in findings if f["priority"] == "2"]
+        low_priority = [f for f in findings if f["priority"] == "3"]
+        
+        return {
+            "success": True,
+            "total_issues": len(findings),
+            "high_priority": len(high_priority),
+            "medium_priority": len(medium_priority),
+            "low_priority": len(low_priority),
+            "findings": findings,
+            "high_priority_details": high_priority[:10],  # Top 10
+            "summary": f"Found {len(findings)} issues: {len(high_priority)} high, {len(medium_priority)} medium, {len(low_priority)} low priority"
+        }
+        
+    except subprocess.TimeoutExpired:
+        return {"success": False, "error": "SpotBugs analysis timed out"}
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+    
+@mcp.tool()
+def detect_code_smells(file_path: str) -> dict:
+    """
+    Analyze a Java file for common code smells.
+    """
+
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            code = f.read()
+        
+        lines = code.split('\n')
+        smells = []
+        
+        # Detect long methods (>50 lines)
+        in_method = False
+        method_start = 0
+        method_name = ""
+        brace_count = 0
+        
+        for i, line in enumerate(lines, 1):
+            stripped = line.strip()
+            
+            # Simple method detection
+            if '(' in stripped and ')' in stripped and '{' in stripped:
+                in_method = True
+                method_start = i
+                method_name = stripped.split('(')[0].split()[-1]
+                brace_count = 1
+            elif in_method:
+                brace_count += stripped.count('{') - stripped.count('}')
+                if brace_count == 0:
+                    method_length = i - method_start
+                    if method_length > 50:
+                        smells.append({
+                            "type": "Long Method",
+                            "severity": "medium",
+                            "line": method_start,
+                            "message": f"Method '{method_name}' is {method_length} lines long (>50 lines)",
+                            "suggestion": "Consider breaking this method into smaller, focused methods"
+                        })
+                    in_method = False
+            
+            # Detect magic numbers
+            if stripped and not stripped.startswith('//'):
+                import re
+                # Look for numeric literals (excluding 0, 1, -1)
+                magic_numbers = re.findall(r'\b(?!0\b|1\b|-1\b)\d{2,}\b', stripped)
+                if magic_numbers:
+                    smells.append({
+                        "type": "Magic Number",
+                        "severity": "low",
+                        "line": i,
+                        "message": f"Magic number(s) found: {', '.join(magic_numbers)}",
+                        "suggestion": "Replace magic numbers with named constants"
+                    })
+            
+            # Detect large parameter lists (>5 parameters)
+            if '(' in stripped and ')' in stripped:
+                params = stripped[stripped.index('('):stripped.index(')')].count(',')
+                if params > 4:
+                    smells.append({
+                        "type": "Long Parameter List",
+                        "severity": "medium",
+                        "line": i,
+                        "message": f"Method has {params + 1} parameters (>5)",
+                        "suggestion": "Consider using a parameter object or builder pattern"
+                    })
+            
+            # Detect nested conditionals (>3 levels)
+            indent_level = (len(line) - len(line.lstrip())) // 4
+            if ('if' in stripped or 'for' in stripped or 'while' in stripped) and indent_level > 3:
+                smells.append({
+                    "type": "Deep Nesting",
+                    "severity": "high",
+                    "line": i,
+                    "message": f"Deep nesting detected (level {indent_level})",
+                    "suggestion": "Extract nested logic into separate methods or use early returns"
+                })
+            
+            # Detect commented-out code
+            if stripped.startswith('//') and any(keyword in stripped for keyword in ['public', 'private', 'protected', 'class', 'if', 'for', 'while']):
+                smells.append({
+                    "type": "Commented Code",
+                    "severity": "low",
+                    "line": i,
+                    "message": "Commented-out code detected",
+                    "suggestion": "Remove commented code (use version control instead)"
+                })
+            
+            # Detect empty catch blocks
+            if 'catch' in stripped:
+                # Find the opening brace for this catch block
+                catch_line_idx = i - 1  # Convert to 0-based index
+                open_brace_idx = catch_line_idx
+                
+                # Look for the opening brace (might be on same line or next line)
+                found_open_brace = False
+                for j in range(catch_line_idx, min(catch_line_idx + 2, len(lines))):
+                    if '{' in lines[j]:
+                        open_brace_idx = j
+                        found_open_brace = True
+                        break
+                
+                if found_open_brace and open_brace_idx + 1 < len(lines):
+                    # Check if the next non-empty/non-comment line after opening brace is a closing brace
+                    for j in range(open_brace_idx + 1, len(lines)):
+                        next_line = lines[j].strip()
+                        # Skip empty lines and comments
+                        if next_line and not next_line.startswith('//'):
+                            if next_line == '}' or next_line.startswith('}'):
+                                smells.append({
+                                    "type": "Empty Catch Block",
+                                    "severity": "high",
+                                    "line": i,
+                                    "message": "Empty catch block - silently swallowing exceptions",
+                                    "suggestion": "At minimum, log the exception or rethrow as RuntimeException"
+                                })
+                            break
+        
+        return {
+            "success": True,
+            "file": file_path,
+            "total_smells": len(smells),
+            "by_severity": {
+                "high": len([s for s in smells if s["severity"] == "high"]),
+                "medium": len([s for s in smells if s["severity"] == "medium"]),
+                "low": len([s for s in smells if s["severity"] == "low"])
+            },
+            "smells": smells
+        }
+        
+    except Exception as e:
+        return {"success": False, "error": str(e)}
+
+
 
 if __name__ == "__main__":
     mcp.run(transport="sse")

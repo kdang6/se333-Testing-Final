@@ -392,109 +392,142 @@ public class DateUtils {
             // (for example &quot;Mi.&quot; for German Wednesday). Try a tolerant parse by
             // adding or removing a dot after the weekday token before the comma.
             // Only attempt this if the pattern contains a weekday token 'EEE' and
-            // the input contains a comma following the weekday.
-<span class="fc bfc" id="L396" title="All 2 branches covered.">            if (parsePattern.contains(&quot;EEE&quot;)) {</span>
-<span class="fc" id="L397">                final int commaIdx = str2.indexOf(',');</span>
-<span class="pc bpc" id="L398" title="1 of 2 branches missed.">                if (commaIdx &gt; 0) {</span>
-<span class="fc" id="L399">                    final String rest = str2.substring(commaIdx);</span>
-<span class="fc bfc" id="L400" title="All 2 branches covered.">                    final Locale localeUsed = (locale == null) ? Locale.getDefault() : locale;</span>
-<span class="fc" id="L401">                    final DateFormatSymbols dfs = new DateFormatSymbols(localeUsed);</span>
-<span class="fc" id="L402">                    final String[] shortWeekdays = dfs.getShortWeekdays();</span>
-<span class="fc" id="L403">                    final String[] shortMonths = dfs.getShortMonths();</span>
-<span class="fc" id="L404">                    System.err.println(&quot;DEBUG parseDateWithLeniency: shortMonths=&quot; + java.util.Arrays.toString(shortMonths));</span>
-<span class="fc" id="L405">                        System.err.println(&quot;DEBUG parseDateWithLeniency: localeUsed=&quot; + localeUsed + &quot; pattern=&quot; + pattern + &quot; input=&quot; + str2);</span>
-<span class="fc" id="L406">                        System.err.println(&quot;DEBUG parseDateWithLeniency: shortWeekdays=&quot; + java.util.Arrays.toString(shortWeekdays));</span>
-                    // Try replacing the weekday token with locale-specific short names
-<span class="fc bfc" id="L408" title="All 2 branches covered.">                    for (int i = 1; i &lt; shortWeekdays.length; i++) {</span>
-<span class="fc" id="L409">                        final String wd = shortWeekdays[i];</span>
-<span class="pc bpc" id="L410" title="2 of 4 branches missed.">                        if (wd == null || wd.length() == 0) {</span>
-<span class="nc" id="L411">                            continue;</span>
+            // the input contains a comma following the weekday. To avoid being
+            // overly permissive (accepting a weekday from a different locale),
+            // only try weekday substitution and the 'without weekday' fallback
+            // when the weekday token in the input matches one of the locale's
+            // short weekday names (or their stripped-dot form).
+<span class="fc bfc" id="L400" title="All 2 branches covered.">            if (parsePattern.contains(&quot;EEE&quot;)) {</span>
+<span class="fc" id="L401">                final int commaIdx = str2.indexOf(',');</span>
+<span class="pc bpc" id="L402" title="1 of 2 branches missed.">                if (commaIdx &gt; 0) {</span>
+<span class="fc" id="L403">                    final String weekdayToken = str2.substring(0, commaIdx).trim();</span>
+<span class="fc" id="L404">                    final String rest = str2.substring(commaIdx);</span>
+<span class="fc bfc" id="L405" title="All 2 branches covered.">                    final Locale localeUsed = (locale == null) ? Locale.getDefault() : locale;</span>
+<span class="fc" id="L406">                    final DateFormatSymbols dfs = new DateFormatSymbols(localeUsed);</span>
+<span class="fc" id="L407">                    final String[] shortWeekdays = dfs.getShortWeekdays();</span>
+                    
+
+                    // Determine if the weekdayToken appears to belong to this locale.
+<span class="fc" id="L411">                    boolean weekdayMatchesLocale = false;</span>
+<span class="fc bfc" id="L412" title="All 4 branches covered.">                    for (int i = 1; i &lt; shortWeekdays.length &amp;&amp; !weekdayMatchesLocale; i++) {</span>
+<span class="fc" id="L413">                        final String wd = shortWeekdays[i];</span>
+<span class="pc bpc" id="L414" title="2 of 4 branches missed.">                        if (wd == null || wd.length() == 0) {</span>
+<span class="nc" id="L415">                            continue;</span>
                         }
-<span class="fc" id="L413">                        final String cand = wd;</span>
-<span class="fc bfc" id="L414" title="All 2 branches covered.">                        final String candStripped = cand.endsWith(&quot;.&quot;) ? cand.substring(0, cand.length() - 1) : cand;</span>
-<span class="fc" id="L415">                        final String[] tries = new String[] { cand, cand + &quot;.&quot;, candStripped };</span>
-<span class="fc bfc" id="L416" title="All 2 branches covered.">                        for (final String t : tries) {</span>
-<span class="pc bpc" id="L417" title="2 of 4 branches missed.">                            if (t == null || t.length() == 0) {</span>
-<span class="nc" id="L418">                                continue;</span>
-                            }
-<span class="fc" id="L420">                            final String alt = t + rest;</span>
-<span class="fc" id="L421">                            System.err.println(&quot;DEBUG parseDateWithLeniency: trying alt='&quot; + alt + &quot;' with pattern='&quot; + pattern + &quot;'&quot;);</span>
-<span class="fc" id="L422">                            pos.setIndex(0);</span>
-<span class="fc" id="L423">                            date = parser.parse(alt, pos);</span>
-<span class="pc bpc" id="L424" title="1 of 4 branches missed.">                            if (date != null &amp;&amp; pos.getIndex() == alt.length()) {</span>
-<span class="fc" id="L425">                                System.err.println(&quot;DEBUG parseDateWithLeniency: success alt='&quot; + alt + &quot;'&quot;);</span>
-<span class="fc" id="L426">                                return date;</span>
-                            }
+<span class="fc bfc" id="L417" title="All 2 branches covered.">                        final String wdStripped = wd.endsWith(&quot;.&quot;) ? wd.substring(0, wd.length() - 1) : wd;</span>
+<span class="pc bpc" id="L418" title="1 of 4 branches missed.">                        if (weekdayToken.equalsIgnoreCase(wd) || weekdayToken.equalsIgnoreCase(wdStripped)) {</span>
+<span class="fc" id="L419">                            weekdayMatchesLocale = true;</span>
                         }
                     }
+
+<span class="fc bfc" id="L423" title="All 2 branches covered.">                    if (weekdayMatchesLocale) {</span>
+                        // Try replacing the weekday token with locale-specific short names
+<span class="fc bfc" id="L425" title="All 2 branches covered.">                        for (int i = 1; i &lt; shortWeekdays.length; i++) {</span>
+<span class="fc" id="L426">                            final String wd = shortWeekdays[i];</span>
+<span class="pc bpc" id="L427" title="2 of 4 branches missed.">                            if (wd == null || wd.length() == 0) {</span>
+<span class="nc" id="L428">                                continue;</span>
+                            }
+<span class="fc" id="L430">                            final String cand = wd;</span>
+<span class="pc bpc" id="L431" title="1 of 2 branches missed.">                            final String candStripped = cand.endsWith(&quot;.&quot;) ? cand.substring(0, cand.length() - 1) : cand;</span>
+<span class="fc" id="L432">                            final String[] tries = new String[] { cand, cand + &quot;.&quot;, candStripped };</span>
+<span class="fc bfc" id="L433" title="All 2 branches covered.">                                for (final String t : tries) {</span>
+<span class="pc bpc" id="L434" title="2 of 4 branches missed.">                                if (t == null || t.length() == 0) {</span>
+<span class="nc" id="L435">                                    continue;</span>
+                                }
+<span class="fc" id="L437">                                final String alt = t + rest;</span>
+<span class="fc" id="L438">                                pos.setIndex(0);</span>
+<span class="fc" id="L439">                                date = parser.parse(alt, pos);</span>
+<span class="pc bpc" id="L440" title="3 of 4 branches missed.">                                if (date != null &amp;&amp; pos.getIndex() == alt.length()) {</span>
+<span class="nc" id="L441">                                    return date;</span>
+                                }
+                            }
+                        }
                         // Some locales use month abbreviations with a trailing dot (e.g., &quot;Apr.&quot;).
                         // Try normalizing those by removing the dot in the input and re-parsing.
-<span class="pc bpc" id="L432" title="1 of 2 branches missed.">                        if (parsePattern.contains(&quot;MMM&quot;)) {</span>
-<span class="fc bfc" id="L433" title="All 2 branches covered.">                            final Locale localeForMonths = (locale == null) ? Locale.getDefault() : locale;</span>
-<span class="fc" id="L434">                            final DateFormatSymbols dfsMonths = new DateFormatSymbols(localeForMonths);</span>
-<span class="fc" id="L435">                            final String[] months = dfsMonths.getShortMonths();</span>
-<span class="fc bfc" id="L436" title="All 2 branches covered.">                            for (final String m : months) {</span>
-<span class="pc bpc" id="L437" title="1 of 4 branches missed.">                                if (m == null || m.length() == 0) {</span>
-<span class="fc" id="L438">                                    continue;</span>
+<span class="pc bpc" id="L447" title="1 of 2 branches missed.">                        if (parsePattern.contains(&quot;MMM&quot;)) {</span>
+<span class="fc bfc" id="L448" title="All 2 branches covered.">                            final Locale localeForMonths = (locale == null) ? Locale.getDefault() : locale;</span>
+<span class="fc" id="L449">                            final DateFormatSymbols dfsMonths = new DateFormatSymbols(localeForMonths);</span>
+<span class="fc" id="L450">                            final String[] months = dfsMonths.getShortMonths();</span>
+<span class="fc bfc" id="L451" title="All 2 branches covered.">                            for (final String m : months) {</span>
+<span class="pc bpc" id="L452" title="1 of 4 branches missed.">                                if (m == null || m.length() == 0) {</span>
+<span class="fc" id="L453">                                    continue;</span>
                                 }
-<span class="fc bfc" id="L440" title="All 2 branches covered.">                                if (m.endsWith(&quot;.&quot;)) {</span>
-<span class="fc" id="L441">                                    final String mStripped = m.substring(0, m.length() - 1);</span>
-<span class="fc" id="L442">                                    final String alt = str2.replace(m, mStripped);</span>
-<span class="fc" id="L443">                                    System.err.println(&quot;DEBUG parseDateWithLeniency: trying month-normalized alt='&quot; + alt + &quot;' pattern='&quot; + pattern + &quot;'&quot;);</span>
-<span class="fc" id="L444">                                    pos.setIndex(0);</span>
-<span class="fc" id="L445">                                    final Date d = parser.parse(alt, pos);</span>
-<span class="pc bpc" id="L446" title="3 of 4 branches missed.">                                    if (d != null &amp;&amp; pos.getIndex() == alt.length()) {</span>
-<span class="nc" id="L447">                                        System.err.println(&quot;DEBUG parseDateWithLeniency: success month-normalized alt='&quot; + alt + &quot;'&quot;);</span>
-<span class="nc" id="L448">                                        return d;</span>
+<span class="fc bfc" id="L455" title="All 2 branches covered.">                                if (m.endsWith(&quot;.&quot;)) {</span>
+<span class="fc" id="L456">                                    final String mStripped = m.substring(0, m.length() - 1);</span>
+<span class="fc" id="L457">                                    final String alt = str2.replace(m, mStripped);</span>
+<span class="fc" id="L458">                                    pos.setIndex(0);</span>
+<span class="fc" id="L459">                                    final Date d = parser.parse(alt, pos);</span>
+<span class="pc bpc" id="L460" title="3 of 4 branches missed.">                                    if (d != null &amp;&amp; pos.getIndex() == alt.length()) {</span>
+<span class="nc" id="L461">                                        return d;</span>
                                     }
                                     // Also try adding the dot if the input doesn't have it (e.g., 'Apr' -&gt; 'Apr.')
-<span class="fc" id="L451">                                    final String altAdd = str2.replace(mStripped, m);</span>
-<span class="fc bfc" id="L452" title="All 2 branches covered.">                                    if (!altAdd.equals(alt)) {</span>
-<span class="fc" id="L453">                                        System.err.println(&quot;DEBUG parseDateWithLeniency: trying month-normalized altAdd='&quot; + altAdd + &quot;' pattern='&quot; + pattern + &quot;'&quot;);</span>
-<span class="fc" id="L454">                                        pos.setIndex(0);</span>
-<span class="fc" id="L455">                                        final Date d2 = parser.parse(altAdd, pos);</span>
-<span class="pc bpc" id="L456" title="3 of 4 branches missed.">                                        if (d2 != null &amp;&amp; pos.getIndex() == altAdd.length()) {</span>
-<span class="nc" id="L457">                                            System.err.println(&quot;DEBUG parseDateWithLeniency: success month-normalized altAdd='&quot; + altAdd + &quot;'&quot;);</span>
-<span class="nc" id="L458">                                            return d2;</span>
+<span class="fc" id="L464">                                    final String altAdd = str2.replace(mStripped, m);</span>
+<span class="fc bfc" id="L465" title="All 2 branches covered.">                                    if (!altAdd.equals(alt)) {</span>
+<span class="fc" id="L466">                                        pos.setIndex(0);</span>
+<span class="fc" id="L467">                                        final Date d2 = parser.parse(altAdd, pos);</span>
+<span class="pc bpc" id="L468" title="3 of 4 branches missed.">                                        if (d2 != null &amp;&amp; pos.getIndex() == altAdd.length()) {</span>
+<span class="nc" id="L469">                                            return d2;</span>
                                         }
                                     }
                                 }
                             }
                         }
+                    } else {
+                        // weekday token does not match locale; skip fallbacks
+                    }
                 }
             }
 
             // As a last resort, if pattern includes a weekday (EEE) try parsing without the weekday
-<span class="fc bfc" id="L468" title="All 2 branches covered.">            if (parsePattern.contains(&quot;EEE&quot;)) {</span>
-<span class="fc" id="L469">                final int commaIdx = str2.indexOf(',');</span>
-<span class="pc bpc" id="L470" title="2 of 4 branches missed.">                if (commaIdx &gt; 0 &amp;&amp; commaIdx &lt; str2.length() - 1) {</span>
-<span class="fc" id="L471">                    final String rest = str2.substring(commaIdx + 1).trim();</span>
-<span class="fc" id="L472">                    final String patternNoWeekday = pattern.replaceFirst(&quot;EEE\\s*,?\\s*&quot;, &quot;&quot;);</span>
-<span class="fc" id="L473">                    System.err.println(&quot;DEBUG parseDateWithLeniency: trying without weekday: rest='&quot; + rest + &quot;' pattern='&quot; + patternNoWeekday + &quot;'&quot;);</span>
-<span class="fc" id="L474">                    parser.applyPattern(patternNoWeekday);</span>
-<span class="fc" id="L475">                    pos.setIndex(0);</span>
-<span class="fc" id="L476">                    final Date d = parser.parse(rest, pos);</span>
-<span class="pc bpc" id="L477" title="3 of 4 branches missed.">                    if (d != null &amp;&amp; pos.getIndex() == rest.length()) {</span>
-<span class="nc" id="L478">                        System.err.println(&quot;DEBUG parseDateWithLeniency: success without weekday rest='&quot; + rest + &quot;'&quot;);</span>
-<span class="nc" id="L479">                        return d;</span>
-                    }
-                    // Also try parsing the rest with an English parser as a fallback
-                    try {
-<span class="fc" id="L483">                        final SimpleDateFormat enParser = new SimpleDateFormat(patternNoWeekday, Locale.ENGLISH);</span>
-<span class="fc" id="L484">                        enParser.setLenient(lenient);</span>
-<span class="fc" id="L485">                        final ParsePosition pos2 = new ParsePosition(0);</span>
-<span class="fc" id="L486">                        final Date d2 = enParser.parse(rest, pos2);</span>
-<span class="pc bpc" id="L487" title="2 of 4 branches missed.">                        if (d2 != null &amp;&amp; pos2.getIndex() == rest.length()) {</span>
-<span class="fc" id="L488">                            System.err.println(&quot;DEBUG parseDateWithLeniency: success without weekday using English parser rest='&quot; + rest + &quot;'&quot;);</span>
-<span class="fc" id="L489">                            return d2;</span>
+<span class="fc bfc" id="L482" title="All 2 branches covered.">            if (parsePattern.contains(&quot;EEE&quot;)) {</span>
+<span class="fc" id="L483">                final int commaIdx = str2.indexOf(',');</span>
+<span class="pc bpc" id="L484" title="2 of 4 branches missed.">                if (commaIdx &gt; 0 &amp;&amp; commaIdx &lt; str2.length() - 1) {</span>
+<span class="fc" id="L485">                    final String weekdayToken = str2.substring(0, commaIdx).trim();</span>
+<span class="fc" id="L486">                    final String rest = str2.substring(commaIdx + 1).trim();</span>
+<span class="fc bfc" id="L487" title="All 2 branches covered.">                    final Locale localeUsed = (locale == null) ? Locale.getDefault() : locale;</span>
+<span class="fc" id="L488">                    final DateFormatSymbols dfs = new DateFormatSymbols(localeUsed);</span>
+<span class="fc" id="L489">                    final String[] shortWeekdays = dfs.getShortWeekdays();</span>
+
+                    // Only try removing the weekday when the token matches the locale's weekday names
+<span class="fc" id="L492">                    boolean weekdayMatchesLocale = false;</span>
+<span class="fc bfc" id="L493" title="All 4 branches covered.">                    for (int i = 1; i &lt; shortWeekdays.length &amp;&amp; !weekdayMatchesLocale; i++) {</span>
+<span class="fc" id="L494">                        final String wd = shortWeekdays[i];</span>
+<span class="pc bpc" id="L495" title="2 of 4 branches missed.">                        if (wd == null || wd.length() == 0) {</span>
+<span class="nc" id="L496">                            continue;</span>
                         }
-<span class="nc" id="L491">                    } catch (final Exception e) {</span>
-                        // ignore
-<span class="nc" id="L493">                    }</span>
+<span class="fc bfc" id="L498" title="All 2 branches covered.">                        final String wdStripped = wd.endsWith(&quot;.&quot;) ? wd.substring(0, wd.length() - 1) : wd;</span>
+<span class="pc bpc" id="L499" title="1 of 4 branches missed.">                        if (weekdayToken.equalsIgnoreCase(wd) || weekdayToken.equalsIgnoreCase(wdStripped)) {</span>
+<span class="fc" id="L500">                            weekdayMatchesLocale = true;</span>
+                        }
+                    }
+
+<span class="fc bfc" id="L504" title="All 2 branches covered.">                    if (weekdayMatchesLocale) {</span>
+<span class="fc" id="L505">                        final String patternNoWeekday = pattern.replaceFirst(&quot;EEE\\s*,?\\s*&quot;, &quot;&quot;);</span>
+<span class="fc" id="L506">                        parser.applyPattern(patternNoWeekday);</span>
+<span class="fc" id="L507">                        pos.setIndex(0);</span>
+<span class="fc" id="L508">                        final Date d = parser.parse(rest, pos);</span>
+<span class="pc bpc" id="L509" title="3 of 4 branches missed.">                        if (d != null &amp;&amp; pos.getIndex() == rest.length()) {</span>
+<span class="nc" id="L510">                            return d;</span>
+                        }
+                        // Also try parsing the rest with an English parser as a fallback
+                        try {
+<span class="fc" id="L514">                            final SimpleDateFormat enParser = new SimpleDateFormat(patternNoWeekday, Locale.ENGLISH);</span>
+<span class="fc" id="L515">                            enParser.setLenient(lenient);</span>
+<span class="fc" id="L516">                            final ParsePosition pos2 = new ParsePosition(0);</span>
+<span class="fc" id="L517">                            final Date d2 = enParser.parse(rest, pos2);</span>
+<span class="pc bpc" id="L518" title="2 of 4 branches missed.">                            if (d2 != null &amp;&amp; pos2.getIndex() == rest.length()) {</span>
+<span class="fc" id="L519">                                return d2;</span>
+                            }
+<span class="nc" id="L521">                        } catch (final Exception e) {</span>
+                            // ignore
+<span class="nc" id="L523">                        }</span>
+                    } else {
+                        // weekday token does not match locale; skip without-weekday fallback
+                    }
                 }
             }
         }
-<span class="fc" id="L497">        throw new ParseException(&quot;Unable to parse the date: &quot; + str, -1);</span>
+<span class="fc" id="L530">        throw new ParseException(&quot;Unable to parse the date: &quot; + str, -1);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -508,7 +541,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if the date is null
      */
     public static Date addYears(final Date date, final int amount) {
-<span class="fc" id="L511">        return add(date, Calendar.YEAR, amount);</span>
+<span class="fc" id="L544">        return add(date, Calendar.YEAR, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -522,7 +555,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if the date is null
      */
     public static Date addMonths(final Date date, final int amount) {
-<span class="fc" id="L525">        return add(date, Calendar.MONTH, amount);</span>
+<span class="fc" id="L558">        return add(date, Calendar.MONTH, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -536,7 +569,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if the date is null
      */
     public static Date addWeeks(final Date date, final int amount) {
-<span class="fc" id="L539">        return add(date, Calendar.WEEK_OF_YEAR, amount);</span>
+<span class="fc" id="L572">        return add(date, Calendar.WEEK_OF_YEAR, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -550,7 +583,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if the date is null
      */
     public static Date addDays(final Date date, final int amount) {
-<span class="fc" id="L553">        return add(date, Calendar.DAY_OF_MONTH, amount);</span>
+<span class="fc" id="L586">        return add(date, Calendar.DAY_OF_MONTH, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -564,7 +597,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if the date is null
      */
     public static Date addHours(final Date date, final int amount) {
-<span class="fc" id="L567">        return add(date, Calendar.HOUR_OF_DAY, amount);</span>
+<span class="fc" id="L600">        return add(date, Calendar.HOUR_OF_DAY, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -578,7 +611,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if the date is null
      */
     public static Date addMinutes(final Date date, final int amount) {
-<span class="fc" id="L581">        return add(date, Calendar.MINUTE, amount);</span>
+<span class="fc" id="L614">        return add(date, Calendar.MINUTE, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -592,7 +625,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if the date is null
      */
     public static Date addSeconds(final Date date, final int amount) {
-<span class="fc" id="L595">        return add(date, Calendar.SECOND, amount);</span>
+<span class="fc" id="L628">        return add(date, Calendar.SECOND, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -606,7 +639,7 @@ public class DateUtils {
      * @throws IllegalArgumentException if the date is null
      */
     public static Date addMilliseconds(final Date date, final int amount) {
-<span class="fc" id="L609">        return add(date, Calendar.MILLISECOND, amount);</span>
+<span class="fc" id="L642">        return add(date, Calendar.MILLISECOND, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -621,13 +654,13 @@ public class DateUtils {
      * @throws IllegalArgumentException if the date is null
      */
     private static Date add(final Date date, final int calendarField, final int amount) {
-<span class="pc bpc" id="L624" title="1 of 2 branches missed.">        if (date == null) {</span>
-<span class="nc" id="L625">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="pc bpc" id="L657" title="1 of 2 branches missed.">        if (date == null) {</span>
+<span class="nc" id="L658">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc" id="L627">        final Calendar c = Calendar.getInstance();</span>
-<span class="fc" id="L628">        c.setTime(date);</span>
-<span class="fc" id="L629">        c.add(calendarField, amount);</span>
-<span class="fc" id="L630">        return c.getTime();</span>
+<span class="fc" id="L660">        final Calendar c = Calendar.getInstance();</span>
+<span class="fc" id="L661">        c.setTime(date);</span>
+<span class="fc" id="L662">        c.add(calendarField, amount);</span>
+<span class="fc" id="L663">        return c.getTime();</span>
     }
     
     //-----------------------------------------------------------------------
@@ -642,7 +675,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static Date setYears(final Date date, final int amount) {
-<span class="fc" id="L645">        return set(date, Calendar.YEAR, amount);</span>
+<span class="fc" id="L678">        return set(date, Calendar.YEAR, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -657,7 +690,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static Date setMonths(final Date date, final int amount) {
-<span class="fc" id="L660">        return set(date, Calendar.MONTH, amount);</span>
+<span class="fc" id="L693">        return set(date, Calendar.MONTH, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -672,7 +705,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static Date setDays(final Date date, final int amount) {
-<span class="fc" id="L675">        return set(date, Calendar.DAY_OF_MONTH, amount);</span>
+<span class="fc" id="L708">        return set(date, Calendar.DAY_OF_MONTH, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -688,7 +721,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static Date setHours(final Date date, final int amount) {
-<span class="fc" id="L691">        return set(date, Calendar.HOUR_OF_DAY, amount);</span>
+<span class="fc" id="L724">        return set(date, Calendar.HOUR_OF_DAY, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -703,7 +736,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static Date setMinutes(final Date date, final int amount) {
-<span class="fc" id="L706">        return set(date, Calendar.MINUTE, amount);</span>
+<span class="fc" id="L739">        return set(date, Calendar.MINUTE, amount);</span>
     }
     
     //-----------------------------------------------------------------------
@@ -718,7 +751,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static Date setSeconds(final Date date, final int amount) {
-<span class="fc" id="L721">        return set(date, Calendar.SECOND, amount);</span>
+<span class="fc" id="L754">        return set(date, Calendar.SECOND, amount);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -733,7 +766,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static Date setMilliseconds(final Date date, final int amount) {
-<span class="fc" id="L736">        return set(date, Calendar.MILLISECOND, amount);</span>
+<span class="fc" id="L769">        return set(date, Calendar.MILLISECOND, amount);</span>
     } 
     
     //-----------------------------------------------------------------------
@@ -750,15 +783,15 @@ public class DateUtils {
      * @since 2.4
      */
     private static Date set(final Date date, final int calendarField, final int amount) {
-<span class="pc bpc" id="L753" title="1 of 2 branches missed.">        if (date == null) {</span>
-<span class="nc" id="L754">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="pc bpc" id="L786" title="1 of 2 branches missed.">        if (date == null) {</span>
+<span class="nc" id="L787">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
         // getInstance() returns a new object, so this method is thread safe.
-<span class="fc" id="L757">        final Calendar c = Calendar.getInstance();</span>
-<span class="fc" id="L758">        c.setLenient(false);</span>
-<span class="fc" id="L759">        c.setTime(date);</span>
-<span class="fc" id="L760">        c.set(calendarField, amount);</span>
-<span class="fc" id="L761">        return c.getTime();</span>
+<span class="fc" id="L790">        final Calendar c = Calendar.getInstance();</span>
+<span class="fc" id="L791">        c.setLenient(false);</span>
+<span class="fc" id="L792">        c.setTime(date);</span>
+<span class="fc" id="L793">        c.set(calendarField, amount);</span>
+<span class="fc" id="L794">        return c.getTime();</span>
     }   
 
     //-----------------------------------------------------------------------
@@ -771,9 +804,9 @@ public class DateUtils {
      * @since 3.0
      */
     public static Calendar toCalendar(final Date date) {
-<span class="fc" id="L774">        final Calendar c = Calendar.getInstance();</span>
-<span class="fc" id="L775">        c.setTime(date);</span>
-<span class="fc" id="L776">        return c;</span>
+<span class="fc" id="L807">        final Calendar c = Calendar.getInstance();</span>
+<span class="fc" id="L808">        c.setTime(date);</span>
+<span class="fc" id="L809">        return c;</span>
     }
     
     //-----------------------------------------------------------------------
@@ -804,13 +837,13 @@ public class DateUtils {
      * @throws ArithmeticException if the year is over 280 million
      */
     public static Date round(final Date date, final int field) {
-<span class="fc bfc" id="L807" title="All 2 branches covered.">        if (date == null) {</span>
-<span class="fc" id="L808">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L840" title="All 2 branches covered.">        if (date == null) {</span>
+<span class="fc" id="L841">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc" id="L810">        final Calendar gval = Calendar.getInstance();</span>
-<span class="fc" id="L811">        gval.setTime(date);</span>
-<span class="fc" id="L812">        modify(gval, field, MODIFY_ROUND);</span>
-<span class="fc" id="L813">        return gval.getTime();</span>
+<span class="fc" id="L843">        final Calendar gval = Calendar.getInstance();</span>
+<span class="fc" id="L844">        gval.setTime(date);</span>
+<span class="fc" id="L845">        modify(gval, field, MODIFY_ROUND);</span>
+<span class="fc" id="L846">        return gval.getTime();</span>
     }
 
     /**
@@ -841,12 +874,12 @@ public class DateUtils {
      * @throws ArithmeticException if the year is over 280 million
      */
     public static Calendar round(final Calendar date, final int field) {
-<span class="fc bfc" id="L844" title="All 2 branches covered.">        if (date == null) {</span>
-<span class="fc" id="L845">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L877" title="All 2 branches covered.">        if (date == null) {</span>
+<span class="fc" id="L878">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc" id="L847">        final Calendar rounded = (Calendar) date.clone();</span>
-<span class="fc" id="L848">        modify(rounded, field, MODIFY_ROUND);</span>
-<span class="fc" id="L849">        return rounded;</span>
+<span class="fc" id="L880">        final Calendar rounded = (Calendar) date.clone();</span>
+<span class="fc" id="L881">        modify(rounded, field, MODIFY_ROUND);</span>
+<span class="fc" id="L882">        return rounded;</span>
     }
 
     /**
@@ -878,15 +911,15 @@ public class DateUtils {
      * @throws ArithmeticException if the year is over 280 million
      */
     public static Date round(final Object date, final int field) {
-<span class="fc bfc" id="L881" title="All 2 branches covered.">        if (date == null) {</span>
-<span class="fc" id="L882">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L914" title="All 2 branches covered.">        if (date == null) {</span>
+<span class="fc" id="L915">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc bfc" id="L884" title="All 2 branches covered.">        if (date instanceof Date) {</span>
-<span class="fc" id="L885">            return round((Date) date, field);</span>
-<span class="fc bfc" id="L886" title="All 2 branches covered.">        } else if (date instanceof Calendar) {</span>
-<span class="fc" id="L887">            return round((Calendar) date, field).getTime();</span>
+<span class="fc bfc" id="L917" title="All 2 branches covered.">        if (date instanceof Date) {</span>
+<span class="fc" id="L918">            return round((Date) date, field);</span>
+<span class="fc bfc" id="L919" title="All 2 branches covered.">        } else if (date instanceof Calendar) {</span>
+<span class="fc" id="L920">            return round((Calendar) date, field).getTime();</span>
         } else {
-<span class="fc" id="L889">            throw new ClassCastException(&quot;Could not round &quot; + date);</span>
+<span class="fc" id="L922">            throw new ClassCastException(&quot;Could not round &quot; + date);</span>
         }
     }
 
@@ -907,13 +940,13 @@ public class DateUtils {
      * @throws ArithmeticException if the year is over 280 million
      */
     public static Date truncate(final Date date, final int field) {
-<span class="fc bfc" id="L910" title="All 2 branches covered.">        if (date == null) {</span>
-<span class="fc" id="L911">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L943" title="All 2 branches covered.">        if (date == null) {</span>
+<span class="fc" id="L944">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc" id="L913">        final Calendar gval = Calendar.getInstance();</span>
-<span class="fc" id="L914">        gval.setTime(date);</span>
-<span class="fc" id="L915">        modify(gval, field, MODIFY_TRUNCATE);</span>
-<span class="fc" id="L916">        return gval.getTime();</span>
+<span class="fc" id="L946">        final Calendar gval = Calendar.getInstance();</span>
+<span class="fc" id="L947">        gval.setTime(date);</span>
+<span class="fc" id="L948">        modify(gval, field, MODIFY_TRUNCATE);</span>
+<span class="fc" id="L949">        return gval.getTime();</span>
     }
 
     /**
@@ -932,12 +965,12 @@ public class DateUtils {
      * @throws ArithmeticException if the year is over 280 million
      */
     public static Calendar truncate(final Calendar date, final int field) {
-<span class="fc bfc" id="L935" title="All 2 branches covered.">        if (date == null) {</span>
-<span class="fc" id="L936">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L968" title="All 2 branches covered.">        if (date == null) {</span>
+<span class="fc" id="L969">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc" id="L938">        final Calendar truncated = (Calendar) date.clone();</span>
-<span class="fc" id="L939">        modify(truncated, field, MODIFY_TRUNCATE);</span>
-<span class="fc" id="L940">        return truncated;</span>
+<span class="fc" id="L971">        final Calendar truncated = (Calendar) date.clone();</span>
+<span class="fc" id="L972">        modify(truncated, field, MODIFY_TRUNCATE);</span>
+<span class="fc" id="L973">        return truncated;</span>
     }
 
     /**
@@ -957,15 +990,15 @@ public class DateUtils {
      * @throws ArithmeticException if the year is over 280 million
      */
     public static Date truncate(final Object date, final int field) {
-<span class="fc bfc" id="L960" title="All 2 branches covered.">        if (date == null) {</span>
-<span class="fc" id="L961">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L993" title="All 2 branches covered.">        if (date == null) {</span>
+<span class="fc" id="L994">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc bfc" id="L963" title="All 2 branches covered.">        if (date instanceof Date) {</span>
-<span class="fc" id="L964">            return truncate((Date) date, field);</span>
-<span class="fc bfc" id="L965" title="All 2 branches covered.">        } else if (date instanceof Calendar) {</span>
-<span class="fc" id="L966">            return truncate((Calendar) date, field).getTime();</span>
+<span class="fc bfc" id="L996" title="All 2 branches covered.">        if (date instanceof Date) {</span>
+<span class="fc" id="L997">            return truncate((Date) date, field);</span>
+<span class="fc bfc" id="L998" title="All 2 branches covered.">        } else if (date instanceof Calendar) {</span>
+<span class="fc" id="L999">            return truncate((Calendar) date, field).getTime();</span>
         } else {
-<span class="fc" id="L968">            throw new ClassCastException(&quot;Could not truncate &quot; + date);</span>
+<span class="fc" id="L1001">            throw new ClassCastException(&quot;Could not truncate &quot; + date);</span>
         }
     }
     
@@ -987,13 +1020,13 @@ public class DateUtils {
      * @since 2.5
      */
     public static Date ceiling(final Date date, final int field) {
-<span class="fc bfc" id="L990" title="All 2 branches covered.">        if (date == null) {</span>
-<span class="fc" id="L991">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L1023" title="All 2 branches covered.">        if (date == null) {</span>
+<span class="fc" id="L1024">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc" id="L993">        final Calendar gval = Calendar.getInstance();</span>
-<span class="fc" id="L994">        gval.setTime(date);</span>
-<span class="fc" id="L995">        modify(gval, field, MODIFY_CEILING);</span>
-<span class="fc" id="L996">        return gval.getTime();</span>
+<span class="fc" id="L1026">        final Calendar gval = Calendar.getInstance();</span>
+<span class="fc" id="L1027">        gval.setTime(date);</span>
+<span class="fc" id="L1028">        modify(gval, field, MODIFY_CEILING);</span>
+<span class="fc" id="L1029">        return gval.getTime();</span>
     }
 
     /**
@@ -1013,12 +1046,12 @@ public class DateUtils {
      * @since 2.5
      */
     public static Calendar ceiling(final Calendar date, final int field) {
-<span class="fc bfc" id="L1016" title="All 2 branches covered.">        if (date == null) {</span>
-<span class="fc" id="L1017">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L1049" title="All 2 branches covered.">        if (date == null) {</span>
+<span class="fc" id="L1050">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc" id="L1019">        final Calendar ceiled = (Calendar) date.clone();</span>
-<span class="fc" id="L1020">        modify(ceiled, field, MODIFY_CEILING);</span>
-<span class="fc" id="L1021">        return ceiled;</span>
+<span class="fc" id="L1052">        final Calendar ceiled = (Calendar) date.clone();</span>
+<span class="fc" id="L1053">        modify(ceiled, field, MODIFY_CEILING);</span>
+<span class="fc" id="L1054">        return ceiled;</span>
     }
 
     /**
@@ -1039,15 +1072,15 @@ public class DateUtils {
      * @since 2.5
      */
     public static Date ceiling(final Object date, final int field) {
-<span class="fc bfc" id="L1042" title="All 2 branches covered.">        if (date == null) {</span>
-<span class="fc" id="L1043">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L1075" title="All 2 branches covered.">        if (date == null) {</span>
+<span class="fc" id="L1076">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc bfc" id="L1045" title="All 2 branches covered.">        if (date instanceof Date) {</span>
-<span class="fc" id="L1046">            return ceiling((Date) date, field);</span>
-<span class="fc bfc" id="L1047" title="All 2 branches covered.">        } else if (date instanceof Calendar) {</span>
-<span class="fc" id="L1048">            return ceiling((Calendar) date, field).getTime();</span>
+<span class="fc bfc" id="L1078" title="All 2 branches covered.">        if (date instanceof Date) {</span>
+<span class="fc" id="L1079">            return ceiling((Date) date, field);</span>
+<span class="fc bfc" id="L1080" title="All 2 branches covered.">        } else if (date instanceof Calendar) {</span>
+<span class="fc" id="L1081">            return ceiling((Calendar) date, field).getTime();</span>
         } else {
-<span class="fc" id="L1050">            throw new ClassCastException(&quot;Could not find ceiling of for type: &quot; + date.getClass());</span>
+<span class="fc" id="L1083">            throw new ClassCastException(&quot;Could not find ceiling of for type: &quot; + date.getClass());</span>
         }
     }
 
@@ -1061,12 +1094,12 @@ public class DateUtils {
      * @throws ArithmeticException if the year is over 280 million
      */
     private static void modify(final Calendar val, final int field, final int modType) {
-<span class="fc bfc" id="L1064" title="All 2 branches covered.">        if (val.get(Calendar.YEAR) &gt; 280000000) {</span>
-<span class="fc" id="L1065">            throw new ArithmeticException(&quot;Calendar value too large for accurate calculations&quot;);</span>
+<span class="fc bfc" id="L1097" title="All 2 branches covered.">        if (val.get(Calendar.YEAR) &gt; 280000000) {</span>
+<span class="fc" id="L1098">            throw new ArithmeticException(&quot;Calendar value too large for accurate calculations&quot;);</span>
         }
         
-<span class="fc bfc" id="L1068" title="All 2 branches covered.">        if (field == Calendar.MILLISECOND) {</span>
-<span class="fc" id="L1069">            return;</span>
+<span class="fc bfc" id="L1101" title="All 2 branches covered.">        if (field == Calendar.MILLISECOND) {</span>
+<span class="fc" id="L1102">            return;</span>
         }
 
         // ----------------- Fix for LANG-59 ---------------------- START ---------------
@@ -1075,126 +1108,126 @@ public class DateUtils {
         // Manually truncate milliseconds, seconds and minutes, rather than using
         // Calendar methods.
 
-<span class="fc" id="L1078">        final Date date = val.getTime();</span>
-<span class="fc" id="L1079">        long time = date.getTime();</span>
-<span class="fc" id="L1080">        boolean done = false;</span>
+<span class="fc" id="L1111">        final Date date = val.getTime();</span>
+<span class="fc" id="L1112">        long time = date.getTime();</span>
+<span class="fc" id="L1113">        boolean done = false;</span>
 
         // truncate milliseconds
-<span class="fc" id="L1083">        final int millisecs = val.get(Calendar.MILLISECOND);</span>
-<span class="fc bfc" id="L1084" title="All 4 branches covered.">        if (MODIFY_TRUNCATE == modType || millisecs &lt; 500) {</span>
-<span class="fc" id="L1085">            time = time - millisecs;</span>
+<span class="fc" id="L1116">        final int millisecs = val.get(Calendar.MILLISECOND);</span>
+<span class="fc bfc" id="L1117" title="All 4 branches covered.">        if (MODIFY_TRUNCATE == modType || millisecs &lt; 500) {</span>
+<span class="fc" id="L1118">            time = time - millisecs;</span>
         }
-<span class="fc bfc" id="L1087" title="All 2 branches covered.">        if (field == Calendar.SECOND) {</span>
-<span class="fc" id="L1088">            done = true;</span>
+<span class="fc bfc" id="L1120" title="All 2 branches covered.">        if (field == Calendar.SECOND) {</span>
+<span class="fc" id="L1121">            done = true;</span>
         }
 
         // truncate seconds
-<span class="fc" id="L1092">        final int seconds = val.get(Calendar.SECOND);</span>
-<span class="fc bfc" id="L1093" title="All 6 branches covered.">        if (!done &amp;&amp; (MODIFY_TRUNCATE == modType || seconds &lt; 30)) {</span>
-<span class="fc" id="L1094">            time = time - (seconds * 1000L);</span>
+<span class="fc" id="L1125">        final int seconds = val.get(Calendar.SECOND);</span>
+<span class="fc bfc" id="L1126" title="All 6 branches covered.">        if (!done &amp;&amp; (MODIFY_TRUNCATE == modType || seconds &lt; 30)) {</span>
+<span class="fc" id="L1127">            time = time - (seconds * 1000L);</span>
         }
-<span class="fc bfc" id="L1096" title="All 2 branches covered.">        if (field == Calendar.MINUTE) {</span>
-<span class="fc" id="L1097">            done = true;</span>
+<span class="fc bfc" id="L1129" title="All 2 branches covered.">        if (field == Calendar.MINUTE) {</span>
+<span class="fc" id="L1130">            done = true;</span>
         }
 
         // truncate minutes
-<span class="fc" id="L1101">        final int minutes = val.get(Calendar.MINUTE);</span>
-<span class="fc bfc" id="L1102" title="All 6 branches covered.">        if (!done &amp;&amp; (MODIFY_TRUNCATE == modType || minutes &lt; 30)) {</span>
-<span class="fc" id="L1103">            time = time - (minutes * 60000L);</span>
+<span class="fc" id="L1134">        final int minutes = val.get(Calendar.MINUTE);</span>
+<span class="fc bfc" id="L1135" title="All 6 branches covered.">        if (!done &amp;&amp; (MODIFY_TRUNCATE == modType || minutes &lt; 30)) {</span>
+<span class="fc" id="L1136">            time = time - (minutes * 60000L);</span>
         }
 
         // reset time
-<span class="fc bfc" id="L1107" title="All 2 branches covered.">        if (date.getTime() != time) {</span>
-<span class="fc" id="L1108">            date.setTime(time);</span>
-<span class="fc" id="L1109">            val.setTime(date);</span>
+<span class="fc bfc" id="L1140" title="All 2 branches covered.">        if (date.getTime() != time) {</span>
+<span class="fc" id="L1141">            date.setTime(time);</span>
+<span class="fc" id="L1142">            val.setTime(date);</span>
         }
         // ----------------- Fix for LANG-59 ----------------------- END ----------------
 
-<span class="fc" id="L1113">        boolean roundUp = false;</span>
-<span class="fc bfc" id="L1114" title="All 2 branches covered.">        for (final int[] aField : fields) {</span>
-<span class="fc bfc" id="L1115" title="All 2 branches covered.">            for (final int element : aField) {</span>
-<span class="fc bfc" id="L1116" title="All 2 branches covered.">                if (element == field) {</span>
+<span class="fc" id="L1146">        boolean roundUp = false;</span>
+<span class="fc bfc" id="L1147" title="All 2 branches covered.">        for (final int[] aField : fields) {</span>
+<span class="fc bfc" id="L1148" title="All 2 branches covered.">            for (final int element : aField) {</span>
+<span class="fc bfc" id="L1149" title="All 2 branches covered.">                if (element == field) {</span>
                     //This is our field... we stop looping
-<span class="fc bfc" id="L1118" title="All 6 branches covered.">                    if (modType == MODIFY_CEILING || (modType == MODIFY_ROUND &amp;&amp; roundUp)) {</span>
-<span class="fc bfc" id="L1119" title="All 2 branches covered.">                        if (field == DateUtils.SEMI_MONTH) {</span>
+<span class="fc bfc" id="L1151" title="All 6 branches covered.">                    if (modType == MODIFY_CEILING || (modType == MODIFY_ROUND &amp;&amp; roundUp)) {</span>
+<span class="fc bfc" id="L1152" title="All 2 branches covered.">                        if (field == DateUtils.SEMI_MONTH) {</span>
                             //This is a special case that's hard to generalize
                             //If the date is 1, we round up to 16, otherwise
                             //  we subtract 15 days and add 1 month
-<span class="fc bfc" id="L1123" title="All 2 branches covered.">                            if (val.get(Calendar.DATE) == 1) {</span>
-<span class="fc" id="L1124">                                val.add(Calendar.DATE, 15);</span>
+<span class="fc bfc" id="L1156" title="All 2 branches covered.">                            if (val.get(Calendar.DATE) == 1) {</span>
+<span class="fc" id="L1157">                                val.add(Calendar.DATE, 15);</span>
                             } else {
-<span class="fc" id="L1126">                                val.add(Calendar.DATE, -15);</span>
-<span class="fc" id="L1127">                                val.add(Calendar.MONTH, 1);</span>
+<span class="fc" id="L1159">                                val.add(Calendar.DATE, -15);</span>
+<span class="fc" id="L1160">                                val.add(Calendar.MONTH, 1);</span>
                             }
 // ----------------- Fix for LANG-440 ---------------------- START ---------------
-<span class="fc bfc" id="L1130" title="All 2 branches covered.">                        } else if (field == Calendar.AM_PM) {</span>
+<span class="fc bfc" id="L1163" title="All 2 branches covered.">                        } else if (field == Calendar.AM_PM) {</span>
                             // This is a special case
                             // If the time is 0, we round up to 12, otherwise
                             //  we subtract 12 hours and add 1 day
-<span class="fc bfc" id="L1134" title="All 2 branches covered.">                            if (val.get(Calendar.HOUR_OF_DAY) == 0) {</span>
-<span class="fc" id="L1135">                                val.add(Calendar.HOUR_OF_DAY, 12);</span>
+<span class="fc bfc" id="L1167" title="All 2 branches covered.">                            if (val.get(Calendar.HOUR_OF_DAY) == 0) {</span>
+<span class="fc" id="L1168">                                val.add(Calendar.HOUR_OF_DAY, 12);</span>
                             } else {
-<span class="fc" id="L1137">                                val.add(Calendar.HOUR_OF_DAY, -12);</span>
-<span class="fc" id="L1138">                                val.add(Calendar.DATE, 1);</span>
+<span class="fc" id="L1170">                                val.add(Calendar.HOUR_OF_DAY, -12);</span>
+<span class="fc" id="L1171">                                val.add(Calendar.DATE, 1);</span>
                             }
 // ----------------- Fix for LANG-440 ---------------------- END ---------------
                         } else {
                             //We need at add one to this field since the
                             //  last number causes us to round up
-<span class="fc" id="L1144">                            val.add(aField[0], 1);</span>
+<span class="fc" id="L1177">                            val.add(aField[0], 1);</span>
                         }
                     }
-<span class="fc" id="L1147">                    return;</span>
+<span class="fc" id="L1180">                    return;</span>
                 }
             }
             //We have various fields that are not easy roundings
-<span class="fc" id="L1151">            int offset = 0;</span>
-<span class="fc" id="L1152">            boolean offsetSet = false;</span>
+<span class="fc" id="L1184">            int offset = 0;</span>
+<span class="fc" id="L1185">            boolean offsetSet = false;</span>
             //These are special types of fields that require different rounding rules
-<span class="fc bfc" id="L1154" title="All 3 branches covered.">            switch (field) {</span>
+<span class="fc bfc" id="L1187" title="All 3 branches covered.">            switch (field) {</span>
                 case DateUtils.SEMI_MONTH:
-<span class="fc bfc" id="L1156" title="All 2 branches covered.">                    if (aField[0] == Calendar.DATE) {</span>
+<span class="fc bfc" id="L1189" title="All 2 branches covered.">                    if (aField[0] == Calendar.DATE) {</span>
                         //If we're going to drop the DATE field's value,
                         //  we want to do this our own way.
                         //We need to subtrace 1 since the date has a minimum of 1
-<span class="fc" id="L1160">                        offset = val.get(Calendar.DATE) - 1;</span>
+<span class="fc" id="L1193">                        offset = val.get(Calendar.DATE) - 1;</span>
                         //If we're above 15 days adjustment, that means we're in the
                         //  bottom half of the month and should stay accordingly.
-<span class="fc bfc" id="L1163" title="All 2 branches covered.">                        if (offset &gt;= 15) {</span>
-<span class="fc" id="L1164">                            offset -= 15;</span>
+<span class="fc bfc" id="L1196" title="All 2 branches covered.">                        if (offset &gt;= 15) {</span>
+<span class="fc" id="L1197">                            offset -= 15;</span>
                         }
                         //Record whether we're in the top or bottom half of that range
-<span class="fc bfc" id="L1167" title="All 2 branches covered.">                        roundUp = offset &gt; 7;</span>
-<span class="fc" id="L1168">                        offsetSet = true;</span>
+<span class="fc bfc" id="L1200" title="All 2 branches covered.">                        roundUp = offset &gt; 7;</span>
+<span class="fc" id="L1201">                        offsetSet = true;</span>
                     }
                     break;
                 case Calendar.AM_PM:
-<span class="fc bfc" id="L1172" title="All 2 branches covered.">                    if (aField[0] == Calendar.HOUR_OF_DAY) {</span>
+<span class="fc bfc" id="L1205" title="All 2 branches covered.">                    if (aField[0] == Calendar.HOUR_OF_DAY) {</span>
                         //If we're going to drop the HOUR field's value,
                         //  we want to do this our own way.
-<span class="fc" id="L1175">                        offset = val.get(Calendar.HOUR_OF_DAY);</span>
-<span class="fc bfc" id="L1176" title="All 2 branches covered.">                        if (offset &gt;= 12) {</span>
-<span class="fc" id="L1177">                            offset -= 12;</span>
+<span class="fc" id="L1208">                        offset = val.get(Calendar.HOUR_OF_DAY);</span>
+<span class="fc bfc" id="L1209" title="All 2 branches covered.">                        if (offset &gt;= 12) {</span>
+<span class="fc" id="L1210">                            offset -= 12;</span>
                         }
-<span class="fc bfc" id="L1179" title="All 2 branches covered.">                        roundUp = offset &gt;= 6;</span>
-<span class="fc" id="L1180">                        offsetSet = true;</span>
+<span class="fc bfc" id="L1212" title="All 2 branches covered.">                        roundUp = offset &gt;= 6;</span>
+<span class="fc" id="L1213">                        offsetSet = true;</span>
                     }
                     break;
             }
-<span class="fc bfc" id="L1184" title="All 2 branches covered.">            if (!offsetSet) {</span>
-<span class="fc" id="L1185">                final int min = val.getActualMinimum(aField[0]);</span>
-<span class="fc" id="L1186">                final int max = val.getActualMaximum(aField[0]);</span>
+<span class="fc bfc" id="L1217" title="All 2 branches covered.">            if (!offsetSet) {</span>
+<span class="fc" id="L1218">                final int min = val.getActualMinimum(aField[0]);</span>
+<span class="fc" id="L1219">                final int max = val.getActualMaximum(aField[0]);</span>
                 //Calculate the offset from the minimum allowed value
-<span class="fc" id="L1188">                offset = val.get(aField[0]) - min;</span>
+<span class="fc" id="L1221">                offset = val.get(aField[0]) - min;</span>
                 //Set roundUp if this is more than half way between the minimum and maximum
-<span class="fc bfc" id="L1190" title="All 2 branches covered.">                roundUp = offset &gt; ((max - min) / 2);</span>
+<span class="fc bfc" id="L1223" title="All 2 branches covered.">                roundUp = offset &gt; ((max - min) / 2);</span>
             }
             //We need to remove this field
-<span class="fc bfc" id="L1193" title="All 2 branches covered.">            if (offset != 0) {</span>
-<span class="fc" id="L1194">                val.set(aField[0], val.get(aField[0]) - offset);</span>
+<span class="fc bfc" id="L1226" title="All 2 branches covered.">            if (offset != 0) {</span>
+<span class="fc" id="L1227">                val.set(aField[0], val.get(aField[0]) - offset);</span>
             }
         }
-<span class="fc" id="L1197">        throw new IllegalArgumentException(&quot;The field &quot; + field + &quot; is not supported&quot;);</span>
+<span class="fc" id="L1230">        throw new IllegalArgumentException(&quot;The field &quot; + field + &quot; is not supported&quot;);</span>
 
     }
 
@@ -1224,12 +1257,12 @@ public class DateUtils {
      * @throws IllegalArgumentException if the rangeStyle is invalid
      */
     public static Iterator&lt;Calendar&gt; iterator(final Date focus, final int rangeStyle) {
-<span class="fc bfc" id="L1227" title="All 2 branches covered.">        if (focus == null) {</span>
-<span class="fc" id="L1228">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L1260" title="All 2 branches covered.">        if (focus == null) {</span>
+<span class="fc" id="L1261">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc" id="L1230">        final Calendar gval = Calendar.getInstance();</span>
-<span class="fc" id="L1231">        gval.setTime(focus);</span>
-<span class="fc" id="L1232">        return iterator(gval, rangeStyle);</span>
+<span class="fc" id="L1263">        final Calendar gval = Calendar.getInstance();</span>
+<span class="fc" id="L1264">        gval.setTime(focus);</span>
+<span class="fc" id="L1265">        return iterator(gval, rangeStyle);</span>
     }
 
     /**
@@ -1257,26 +1290,26 @@ public class DateUtils {
      * @throws IllegalArgumentException if the rangeStyle is invalid
      */
     public static Iterator&lt;Calendar&gt; iterator(final Calendar focus, final int rangeStyle) {
-<span class="fc bfc" id="L1260" title="All 2 branches covered.">        if (focus == null) {</span>
-<span class="fc" id="L1261">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L1293" title="All 2 branches covered.">        if (focus == null) {</span>
+<span class="fc" id="L1294">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc" id="L1263">        Calendar start = null;</span>
-<span class="fc" id="L1264">        Calendar end = null;</span>
-<span class="fc" id="L1265">        int startCutoff = Calendar.SUNDAY;</span>
-<span class="fc" id="L1266">        int endCutoff = Calendar.SATURDAY;</span>
-<span class="fc bfc" id="L1267" title="All 3 branches covered.">        switch (rangeStyle) {</span>
+<span class="fc" id="L1296">        Calendar start = null;</span>
+<span class="fc" id="L1297">        Calendar end = null;</span>
+<span class="fc" id="L1298">        int startCutoff = Calendar.SUNDAY;</span>
+<span class="fc" id="L1299">        int endCutoff = Calendar.SATURDAY;</span>
+<span class="fc bfc" id="L1300" title="All 3 branches covered.">        switch (rangeStyle) {</span>
             case RANGE_MONTH_SUNDAY:
             case RANGE_MONTH_MONDAY:
                 //Set start to the first of the month
-<span class="fc" id="L1271">                start = truncate(focus, Calendar.MONTH);</span>
+<span class="fc" id="L1304">                start = truncate(focus, Calendar.MONTH);</span>
                 //Set end to the last of the month
-<span class="fc" id="L1273">                end = (Calendar) start.clone();</span>
-<span class="fc" id="L1274">                end.add(Calendar.MONTH, 1);</span>
-<span class="fc" id="L1275">                end.add(Calendar.DATE, -1);</span>
+<span class="fc" id="L1306">                end = (Calendar) start.clone();</span>
+<span class="fc" id="L1307">                end.add(Calendar.MONTH, 1);</span>
+<span class="fc" id="L1308">                end.add(Calendar.DATE, -1);</span>
                 //Loop start back to the previous sunday or monday
-<span class="fc bfc" id="L1277" title="All 2 branches covered.">                if (rangeStyle == RANGE_MONTH_MONDAY) {</span>
-<span class="fc" id="L1278">                    startCutoff = Calendar.MONDAY;</span>
-<span class="fc" id="L1279">                    endCutoff = Calendar.SUNDAY;</span>
+<span class="fc bfc" id="L1310" title="All 2 branches covered.">                if (rangeStyle == RANGE_MONTH_MONDAY) {</span>
+<span class="fc" id="L1311">                    startCutoff = Calendar.MONDAY;</span>
+<span class="fc" id="L1312">                    endCutoff = Calendar.SUNDAY;</span>
                 }
                 break;
             case RANGE_WEEK_SUNDAY:
@@ -1284,48 +1317,48 @@ public class DateUtils {
             case RANGE_WEEK_RELATIVE:
             case RANGE_WEEK_CENTER:
                 //Set start and end to the current date
-<span class="fc" id="L1287">                start = truncate(focus, Calendar.DATE);</span>
-<span class="fc" id="L1288">                end = truncate(focus, Calendar.DATE);</span>
-<span class="pc bpc" id="L1289" title="1 of 5 branches missed.">                switch (rangeStyle) {</span>
+<span class="fc" id="L1320">                start = truncate(focus, Calendar.DATE);</span>
+<span class="fc" id="L1321">                end = truncate(focus, Calendar.DATE);</span>
+<span class="pc bpc" id="L1322" title="1 of 5 branches missed.">                switch (rangeStyle) {</span>
                     case RANGE_WEEK_SUNDAY:
                         //already set by default
-<span class="fc" id="L1292">                        break;</span>
+<span class="fc" id="L1325">                        break;</span>
                     case RANGE_WEEK_MONDAY:
-<span class="fc" id="L1294">                        startCutoff = Calendar.MONDAY;</span>
-<span class="fc" id="L1295">                        endCutoff = Calendar.SUNDAY;</span>
-<span class="fc" id="L1296">                        break;</span>
+<span class="fc" id="L1327">                        startCutoff = Calendar.MONDAY;</span>
+<span class="fc" id="L1328">                        endCutoff = Calendar.SUNDAY;</span>
+<span class="fc" id="L1329">                        break;</span>
                     case RANGE_WEEK_RELATIVE:
-<span class="fc" id="L1298">                        startCutoff = focus.get(Calendar.DAY_OF_WEEK);</span>
-<span class="fc" id="L1299">                        endCutoff = startCutoff - 1;</span>
-<span class="fc" id="L1300">                        break;</span>
+<span class="fc" id="L1331">                        startCutoff = focus.get(Calendar.DAY_OF_WEEK);</span>
+<span class="fc" id="L1332">                        endCutoff = startCutoff - 1;</span>
+<span class="fc" id="L1333">                        break;</span>
                     case RANGE_WEEK_CENTER:
-<span class="fc" id="L1302">                        startCutoff = focus.get(Calendar.DAY_OF_WEEK) - 3;</span>
-<span class="fc" id="L1303">                        endCutoff = focus.get(Calendar.DAY_OF_WEEK) + 3;</span>
+<span class="fc" id="L1335">                        startCutoff = focus.get(Calendar.DAY_OF_WEEK) - 3;</span>
+<span class="fc" id="L1336">                        endCutoff = focus.get(Calendar.DAY_OF_WEEK) + 3;</span>
                         break;
                 }
-<span class="fc" id="L1306">                break;</span>
+<span class="fc" id="L1339">                break;</span>
             default:
-<span class="fc" id="L1308">                throw new IllegalArgumentException(&quot;The range style &quot; + rangeStyle + &quot; is not valid.&quot;);</span>
+<span class="fc" id="L1341">                throw new IllegalArgumentException(&quot;The range style &quot; + rangeStyle + &quot; is not valid.&quot;);</span>
         }
-<span class="fc bfc" id="L1310" title="All 2 branches covered.">        if (startCutoff &lt; Calendar.SUNDAY) {</span>
-<span class="fc" id="L1311">            startCutoff += 7;</span>
+<span class="fc bfc" id="L1343" title="All 2 branches covered.">        if (startCutoff &lt; Calendar.SUNDAY) {</span>
+<span class="fc" id="L1344">            startCutoff += 7;</span>
         }
-<span class="pc bpc" id="L1313" title="1 of 2 branches missed.">        if (startCutoff &gt; Calendar.SATURDAY) {</span>
-<span class="nc" id="L1314">            startCutoff -= 7;</span>
+<span class="pc bpc" id="L1346" title="1 of 2 branches missed.">        if (startCutoff &gt; Calendar.SATURDAY) {</span>
+<span class="nc" id="L1347">            startCutoff -= 7;</span>
         }
-<span class="fc bfc" id="L1316" title="All 2 branches covered.">        if (endCutoff &lt; Calendar.SUNDAY) {</span>
-<span class="fc" id="L1317">            endCutoff += 7;</span>
+<span class="fc bfc" id="L1349" title="All 2 branches covered.">        if (endCutoff &lt; Calendar.SUNDAY) {</span>
+<span class="fc" id="L1350">            endCutoff += 7;</span>
         }
-<span class="fc bfc" id="L1319" title="All 2 branches covered.">        if (endCutoff &gt; Calendar.SATURDAY) {</span>
-<span class="fc" id="L1320">            endCutoff -= 7;</span>
+<span class="fc bfc" id="L1352" title="All 2 branches covered.">        if (endCutoff &gt; Calendar.SATURDAY) {</span>
+<span class="fc" id="L1353">            endCutoff -= 7;</span>
         }
-<span class="fc bfc" id="L1322" title="All 2 branches covered.">        while (start.get(Calendar.DAY_OF_WEEK) != startCutoff) {</span>
-<span class="fc" id="L1323">            start.add(Calendar.DATE, -1);</span>
+<span class="fc bfc" id="L1355" title="All 2 branches covered.">        while (start.get(Calendar.DAY_OF_WEEK) != startCutoff) {</span>
+<span class="fc" id="L1356">            start.add(Calendar.DATE, -1);</span>
         }
-<span class="fc bfc" id="L1325" title="All 2 branches covered.">        while (end.get(Calendar.DAY_OF_WEEK) != endCutoff) {</span>
-<span class="fc" id="L1326">            end.add(Calendar.DATE, 1);</span>
+<span class="fc bfc" id="L1358" title="All 2 branches covered.">        while (end.get(Calendar.DAY_OF_WEEK) != endCutoff) {</span>
+<span class="fc" id="L1359">            end.add(Calendar.DATE, 1);</span>
         }
-<span class="fc" id="L1328">        return new DateIterator(start, end);</span>
+<span class="fc" id="L1361">        return new DateIterator(start, end);</span>
     }
 
     /**
@@ -1345,15 +1378,15 @@ public class DateUtils {
      * @throws ClassCastException if the object type is not a {@code Date} or {@code Calendar}
      */
     public static Iterator&lt;?&gt; iterator(final Object focus, final int rangeStyle) {
-<span class="fc bfc" id="L1348" title="All 2 branches covered.">        if (focus == null) {</span>
-<span class="fc" id="L1349">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L1381" title="All 2 branches covered.">        if (focus == null) {</span>
+<span class="fc" id="L1382">            throw new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc bfc" id="L1351" title="All 2 branches covered.">        if (focus instanceof Date) {</span>
-<span class="fc" id="L1352">            return iterator((Date) focus, rangeStyle);</span>
-<span class="fc bfc" id="L1353" title="All 2 branches covered.">        } else if (focus instanceof Calendar) {</span>
-<span class="fc" id="L1354">            return iterator((Calendar) focus, rangeStyle);</span>
+<span class="fc bfc" id="L1384" title="All 2 branches covered.">        if (focus instanceof Date) {</span>
+<span class="fc" id="L1385">            return iterator((Date) focus, rangeStyle);</span>
+<span class="fc bfc" id="L1386" title="All 2 branches covered.">        } else if (focus instanceof Calendar) {</span>
+<span class="fc" id="L1387">            return iterator((Calendar) focus, rangeStyle);</span>
         } else {
-<span class="fc" id="L1356">            throw new ClassCastException(&quot;Could not iterate based on &quot; + focus);</span>
+<span class="fc" id="L1389">            throw new ClassCastException(&quot;Could not iterate based on &quot; + focus);</span>
         }
     }
     
@@ -1391,7 +1424,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static long getFragmentInMilliseconds(final Date date, final int fragment) {
-<span class="fc" id="L1394">        return getFragment(date, fragment, Calendar.MILLISECOND);    </span>
+<span class="fc" id="L1427">        return getFragment(date, fragment, Calendar.MILLISECOND);    </span>
     }
     
     /**
@@ -1431,7 +1464,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static long getFragmentInSeconds(final Date date, final int fragment) {
-<span class="fc" id="L1434">        return getFragment(date, fragment, Calendar.SECOND);</span>
+<span class="fc" id="L1467">        return getFragment(date, fragment, Calendar.SECOND);</span>
     }
     
     /**
@@ -1471,7 +1504,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static long getFragmentInMinutes(final Date date, final int fragment) {
-<span class="fc" id="L1474">        return getFragment(date, fragment, Calendar.MINUTE);</span>
+<span class="fc" id="L1507">        return getFragment(date, fragment, Calendar.MINUTE);</span>
     }
     
     /**
@@ -1511,7 +1544,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static long getFragmentInHours(final Date date, final int fragment) {
-<span class="fc" id="L1514">        return getFragment(date, fragment, Calendar.HOUR_OF_DAY);</span>
+<span class="fc" id="L1547">        return getFragment(date, fragment, Calendar.HOUR_OF_DAY);</span>
     }
     
     /**
@@ -1551,7 +1584,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static long getFragmentInDays(final Date date, final int fragment) {
-<span class="fc" id="L1554">        return getFragment(date, fragment, Calendar.DAY_OF_YEAR);</span>
+<span class="fc" id="L1587">        return getFragment(date, fragment, Calendar.DAY_OF_YEAR);</span>
     }
 
     /**
@@ -1591,7 +1624,7 @@ public class DateUtils {
      * @since 2.4
      */
   public static long getFragmentInMilliseconds(final Calendar calendar, final int fragment) {
-<span class="fc" id="L1594">    return getFragment(calendar, fragment, Calendar.MILLISECOND);</span>
+<span class="fc" id="L1627">    return getFragment(calendar, fragment, Calendar.MILLISECOND);</span>
   }
     /**
      * &lt;p&gt;Returns the number of seconds within the 
@@ -1630,7 +1663,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static long getFragmentInSeconds(final Calendar calendar, final int fragment) {
-<span class="fc" id="L1633">        return getFragment(calendar, fragment, Calendar.SECOND);</span>
+<span class="fc" id="L1666">        return getFragment(calendar, fragment, Calendar.SECOND);</span>
     }
     
     /**
@@ -1670,7 +1703,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static long getFragmentInMinutes(final Calendar calendar, final int fragment) {
-<span class="fc" id="L1673">        return getFragment(calendar, fragment, Calendar.MINUTE);</span>
+<span class="fc" id="L1706">        return getFragment(calendar, fragment, Calendar.MINUTE);</span>
     }
     
     /**
@@ -1710,7 +1743,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static long getFragmentInHours(final Calendar calendar, final int fragment) {
-<span class="fc" id="L1713">        return getFragment(calendar, fragment, Calendar.HOUR_OF_DAY);</span>
+<span class="fc" id="L1746">        return getFragment(calendar, fragment, Calendar.HOUR_OF_DAY);</span>
     }
     
     /**
@@ -1752,7 +1785,7 @@ public class DateUtils {
      * @since 2.4
      */
     public static long getFragmentInDays(final Calendar calendar, final int fragment) {
-<span class="fc" id="L1755">        return getFragment(calendar, fragment, Calendar.DAY_OF_YEAR);</span>
+<span class="fc" id="L1788">        return getFragment(calendar, fragment, Calendar.DAY_OF_YEAR);</span>
     }
     
     /**
@@ -1767,12 +1800,12 @@ public class DateUtils {
      * @since 2.4
      */
     private static long getFragment(final Date date, final int fragment, final int unit) {
-<span class="fc bfc" id="L1770" title="All 2 branches covered.">        if(date == null) {</span>
-<span class="fc" id="L1771">            throw  new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
+<span class="fc bfc" id="L1803" title="All 2 branches covered.">        if(date == null) {</span>
+<span class="fc" id="L1804">            throw  new IllegalArgumentException(&quot;The date must not be null&quot;);</span>
         }
-<span class="fc" id="L1773">        final Calendar calendar = Calendar.getInstance();</span>
-<span class="fc" id="L1774">        calendar.setTime(date);</span>
-<span class="fc" id="L1775">        return getFragment(calendar, fragment, unit);</span>
+<span class="fc" id="L1806">        final Calendar calendar = Calendar.getInstance();</span>
+<span class="fc" id="L1807">        calendar.setTime(date);</span>
+<span class="fc" id="L1808">        return getFragment(calendar, fragment, unit);</span>
     }
 
     /**
@@ -1787,23 +1820,23 @@ public class DateUtils {
      * @since 2.4
      */
     private static long getFragment(final Calendar calendar, final int fragment, final int unit) {
-<span class="fc bfc" id="L1790" title="All 2 branches covered.">        if(calendar == null) {</span>
-<span class="fc" id="L1791">            throw  new IllegalArgumentException(&quot;The date must not be null&quot;); </span>
+<span class="fc bfc" id="L1823" title="All 2 branches covered.">        if(calendar == null) {</span>
+<span class="fc" id="L1824">            throw  new IllegalArgumentException(&quot;The date must not be null&quot;); </span>
         }
-<span class="fc" id="L1793">        final long millisPerUnit = getMillisPerUnit(unit);</span>
-<span class="fc" id="L1794">        long result = 0;</span>
+<span class="fc" id="L1826">        final long millisPerUnit = getMillisPerUnit(unit);</span>
+<span class="fc" id="L1827">        long result = 0;</span>
         
         // Fragments bigger than a day require a breakdown to days
-<span class="fc bfc" id="L1797" title="All 3 branches covered.">        switch (fragment) {</span>
+<span class="fc bfc" id="L1830" title="All 3 branches covered.">        switch (fragment) {</span>
             case Calendar.YEAR:
-<span class="fc" id="L1799">                result += (calendar.get(Calendar.DAY_OF_YEAR) * MILLIS_PER_DAY) / millisPerUnit;</span>
-<span class="fc" id="L1800">                break;</span>
+<span class="fc" id="L1832">                result += (calendar.get(Calendar.DAY_OF_YEAR) * MILLIS_PER_DAY) / millisPerUnit;</span>
+<span class="fc" id="L1833">                break;</span>
             case Calendar.MONTH:
-<span class="fc" id="L1802">                result += (calendar.get(Calendar.DAY_OF_MONTH) * MILLIS_PER_DAY) / millisPerUnit;</span>
+<span class="fc" id="L1835">                result += (calendar.get(Calendar.DAY_OF_MONTH) * MILLIS_PER_DAY) / millisPerUnit;</span>
                 break;
         }
 
-<span class="fc bfc" id="L1806" title="All 6 branches covered.">        switch (fragment) {</span>
+<span class="fc bfc" id="L1839" title="All 6 branches covered.">        switch (fragment) {</span>
             // Number of days already calculated for these cases
             case Calendar.YEAR:
             case Calendar.MONTH:
@@ -1811,21 +1844,21 @@ public class DateUtils {
             // The rest of the valid cases
             case Calendar.DAY_OF_YEAR:
             case Calendar.DATE:
-<span class="fc" id="L1814">                result += (calendar.get(Calendar.HOUR_OF_DAY) * MILLIS_PER_HOUR) / millisPerUnit;</span>
+<span class="fc" id="L1847">                result += (calendar.get(Calendar.HOUR_OF_DAY) * MILLIS_PER_HOUR) / millisPerUnit;</span>
                 //$FALL-THROUGH$
             case Calendar.HOUR_OF_DAY:
-<span class="fc" id="L1817">                result += (calendar.get(Calendar.MINUTE) * MILLIS_PER_MINUTE) / millisPerUnit;</span>
+<span class="fc" id="L1850">                result += (calendar.get(Calendar.MINUTE) * MILLIS_PER_MINUTE) / millisPerUnit;</span>
                 //$FALL-THROUGH$
             case Calendar.MINUTE:
-<span class="fc" id="L1820">                result += (calendar.get(Calendar.SECOND) * MILLIS_PER_SECOND) / millisPerUnit;</span>
+<span class="fc" id="L1853">                result += (calendar.get(Calendar.SECOND) * MILLIS_PER_SECOND) / millisPerUnit;</span>
                 //$FALL-THROUGH$
             case Calendar.SECOND:
-<span class="fc" id="L1823">                result += (calendar.get(Calendar.MILLISECOND) * 1) / millisPerUnit;</span>
-<span class="fc" id="L1824">                break;</span>
-<span class="fc" id="L1825">            case Calendar.MILLISECOND: break;//never useful</span>
-<span class="fc" id="L1826">                default: throw new IllegalArgumentException(&quot;The fragment &quot; + fragment + &quot; is not supported&quot;);</span>
+<span class="fc" id="L1856">                result += (calendar.get(Calendar.MILLISECOND) * 1) / millisPerUnit;</span>
+<span class="fc" id="L1857">                break;</span>
+<span class="fc" id="L1858">            case Calendar.MILLISECOND: break;//never useful</span>
+<span class="fc" id="L1859">                default: throw new IllegalArgumentException(&quot;The fragment &quot; + fragment + &quot; is not supported&quot;);</span>
         }
-<span class="fc" id="L1828">        return result;</span>
+<span class="fc" id="L1861">        return result;</span>
     }
     
     /**
@@ -1842,7 +1875,7 @@ public class DateUtils {
      * @since 3.0
      */
     public static boolean truncatedEquals(final Calendar cal1, final Calendar cal2, final int field) {
-<span class="nc bnc" id="L1845" title="All 2 branches missed.">        return truncatedCompareTo(cal1, cal2, field) == 0;</span>
+<span class="nc bnc" id="L1878" title="All 2 branches missed.">        return truncatedCompareTo(cal1, cal2, field) == 0;</span>
     }
 
     /**
@@ -1859,7 +1892,7 @@ public class DateUtils {
      * @since 3.0
      */
     public static boolean truncatedEquals(final Date date1, final Date date2, final int field) {
-<span class="nc bnc" id="L1862" title="All 2 branches missed.">        return truncatedCompareTo(date1, date2, field) == 0;</span>
+<span class="nc bnc" id="L1895" title="All 2 branches missed.">        return truncatedCompareTo(date1, date2, field) == 0;</span>
     }
 
     /**
@@ -1877,9 +1910,9 @@ public class DateUtils {
      * @since 3.0
      */
     public static int truncatedCompareTo(final Calendar cal1, final Calendar cal2, final int field) {
-<span class="nc" id="L1880">        final Calendar truncatedCal1 = truncate(cal1, field);</span>
-<span class="nc" id="L1881">        final Calendar truncatedCal2 = truncate(cal2, field);</span>
-<span class="nc" id="L1882">        return truncatedCal1.compareTo(truncatedCal2);</span>
+<span class="nc" id="L1913">        final Calendar truncatedCal1 = truncate(cal1, field);</span>
+<span class="nc" id="L1914">        final Calendar truncatedCal2 = truncate(cal2, field);</span>
+<span class="nc" id="L1915">        return truncatedCal1.compareTo(truncatedCal2);</span>
     }
 
     /**
@@ -1897,9 +1930,9 @@ public class DateUtils {
      * @since 3.0
      */
     public static int truncatedCompareTo(final Date date1, final Date date2, final int field) {
-<span class="nc" id="L1900">        final Date truncatedDate1 = truncate(date1, field);</span>
-<span class="nc" id="L1901">        final Date truncatedDate2 = truncate(date2, field);</span>
-<span class="nc" id="L1902">        return truncatedDate1.compareTo(truncatedDate2);</span>
+<span class="nc" id="L1933">        final Date truncatedDate1 = truncate(date1, field);</span>
+<span class="nc" id="L1934">        final Date truncatedDate2 = truncate(date2, field);</span>
+<span class="nc" id="L1935">        return truncatedDate1.compareTo(truncatedDate2);</span>
     }
 
     /**
@@ -1912,27 +1945,27 @@ public class DateUtils {
      * @since 2.4 
      */
     private static long getMillisPerUnit(final int unit) {
-<span class="fc" id="L1915">        long result = Long.MAX_VALUE;</span>
-<span class="pc bpc" id="L1916" title="1 of 6 branches missed.">        switch (unit) {</span>
+<span class="fc" id="L1948">        long result = Long.MAX_VALUE;</span>
+<span class="pc bpc" id="L1949" title="1 of 6 branches missed.">        switch (unit) {</span>
             case Calendar.DAY_OF_YEAR:
             case Calendar.DATE:
-<span class="fc" id="L1919">                result = MILLIS_PER_DAY;</span>
-<span class="fc" id="L1920">                break;</span>
+<span class="fc" id="L1952">                result = MILLIS_PER_DAY;</span>
+<span class="fc" id="L1953">                break;</span>
             case Calendar.HOUR_OF_DAY:
-<span class="fc" id="L1922">                result = MILLIS_PER_HOUR;</span>
-<span class="fc" id="L1923">                break;</span>
+<span class="fc" id="L1955">                result = MILLIS_PER_HOUR;</span>
+<span class="fc" id="L1956">                break;</span>
             case Calendar.MINUTE:
-<span class="fc" id="L1925">                result = MILLIS_PER_MINUTE;</span>
-<span class="fc" id="L1926">                break;</span>
+<span class="fc" id="L1958">                result = MILLIS_PER_MINUTE;</span>
+<span class="fc" id="L1959">                break;</span>
             case Calendar.SECOND:
-<span class="fc" id="L1928">                result = MILLIS_PER_SECOND;</span>
-<span class="fc" id="L1929">                break;</span>
+<span class="fc" id="L1961">                result = MILLIS_PER_SECOND;</span>
+<span class="fc" id="L1962">                break;</span>
             case Calendar.MILLISECOND:
-<span class="fc" id="L1931">                result = 1;</span>
-<span class="fc" id="L1932">                break;</span>
-<span class="nc" id="L1933">            default: throw new IllegalArgumentException(&quot;The unit &quot; + unit + &quot; cannot be represented is milleseconds&quot;);</span>
+<span class="fc" id="L1964">                result = 1;</span>
+<span class="fc" id="L1965">                break;</span>
+<span class="nc" id="L1966">            default: throw new IllegalArgumentException(&quot;The unit &quot; + unit + &quot; cannot be represented is milleseconds&quot;);</span>
         }
-<span class="fc" id="L1935">        return result;</span>
+<span class="fc" id="L1968">        return result;</span>
     }
 
     //-----------------------------------------------------------------------
@@ -1950,11 +1983,11 @@ public class DateUtils {
          * @param endFinal end date (inclusive)
          */
         DateIterator(final Calendar startFinal, final Calendar endFinal) {
-<span class="fc" id="L1953">            super();</span>
-<span class="fc" id="L1954">            this.endFinal = endFinal;</span>
-<span class="fc" id="L1955">            spot = startFinal;</span>
-<span class="fc" id="L1956">            spot.add(Calendar.DATE, -1);</span>
-<span class="fc" id="L1957">        }</span>
+<span class="fc" id="L1986">            super();</span>
+<span class="fc" id="L1987">            this.endFinal = endFinal;</span>
+<span class="fc" id="L1988">            spot = startFinal;</span>
+<span class="fc" id="L1989">            spot.add(Calendar.DATE, -1);</span>
+<span class="fc" id="L1990">        }</span>
 
         /**
          * Has the iterator not reached the end date yet?
@@ -1963,7 +1996,7 @@ public class DateUtils {
          */
         @Override
         public boolean hasNext() {
-<span class="fc" id="L1966">            return spot.before(endFinal);</span>
+<span class="fc" id="L1999">            return spot.before(endFinal);</span>
         }
 
         /**
@@ -1973,11 +2006,11 @@ public class DateUtils {
          */
         @Override
         public Calendar next() {
-<span class="fc bfc" id="L1976" title="All 2 branches covered.">            if (spot.equals(endFinal)) {</span>
-<span class="fc" id="L1977">                throw new NoSuchElementException();</span>
+<span class="fc bfc" id="L2009" title="All 2 branches covered.">            if (spot.equals(endFinal)) {</span>
+<span class="fc" id="L2010">                throw new NoSuchElementException();</span>
             }
-<span class="fc" id="L1979">            spot.add(Calendar.DATE, 1);</span>
-<span class="fc" id="L1980">            return (Calendar) spot.clone();</span>
+<span class="fc" id="L2012">            spot.add(Calendar.DATE, 1);</span>
+<span class="fc" id="L2013">            return (Calendar) spot.clone();</span>
         }
 
         /**
@@ -1988,7 +2021,7 @@ public class DateUtils {
          */
         @Override
         public void remove() {
-<span class="fc" id="L1991">            throw new UnsupportedOperationException();</span>
+<span class="fc" id="L2024">            throw new UnsupportedOperationException();</span>
         }
     }
 

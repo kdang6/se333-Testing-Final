@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="37" failures="0" name="org.apache.commons.lang3.text.StrSubstitutorTest" time="0.005" errors="0" skipped="0">
+<testsuite tests="37" failures="0" name="org.apache.commons.lang3.text.StrSubstitutorTest" time="0.006" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -28,7 +28,7 @@
     <property name="os.name" value="Windows 11"/>
     <property name="classworlds.conf" value="C:\Program Files\apache-maven-3.9.11\bin\m2.conf"/>
     <property name="sun.jnu.encoding" value="Cp1252"/>
-    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-17.0.16.8-hotspot\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;c:\Users\Kenny\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;c:\Users\Kenny\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\copilotCli;%MAVEN_HOME%\bin;C:\Program Files\Eclipse Adoptium\jdk-17.0.16.8-hotspot\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;D:\Program Files\nodejs\;C:\Users\Kenny\.cargo\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;D:\Program Files\nodejs\;C:\Users\Kenny\AppData\Local\Programs\Python\Launcher\;C:\Users\Kenny\AppData\Local\Microsoft\WindowsApps;D:\Users\Kenny\AppData\Local\Programs\Microsoft VS Code\bin;C:\Programs;C:\Users\Kenny\AppData\Local\Programs\Python\Python313;C:\Users\Kenny\AppData\Local\Programs\Python\Python313\Scripts;C:\Users\Kenny\AppData\Local\Microsoft\WindowsApps;C:\Users\Kenny\AppData\Roaming\npm;C:\Program Files\apache-maven-3.9.11\bin;c:\Users\Kenny\.vscode\extensions\vscjava.vscode-java-debug-0.58.3\bundled\scripts\noConfigScripts;c:\Users\Kenny\.vscode\extensions\ms-python.debugpy-2025.16.0-win32-x64\bundled\scripts\noConfigScripts;."/>
+    <property name="java.library.path" value="C:\Program Files\Eclipse Adoptium\jdk-17.0.16.8-hotspot\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;c:\Users\Kenny\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\debugCommand;c:\Users\Kenny\AppData\Roaming\Code\User\globalStorage\github.copilot-chat\copilotCli;%MAVEN_HOME%\bin;C:\Program Files\Eclipse Adoptium\jdk-17.0.16.8-hotspot\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files\Git\cmd;D:\Program Files\nodejs\;C:\Users\Kenny\.cargo\bin;C:\Program Files\Common Files\Oracle\Java\javapath;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\Git\cmd;D:\Program Files\nodejs\;C:\Users\Kenny\AppData\Local\Programs\Python\Launcher\;C:\Users\Kenny\AppData\Local\Microsoft\WindowsApps;D:\Users\Kenny\AppData\Local\Programs\Microsoft VS Code\bin;C:\Programs;C:\Users\Kenny\AppData\Local\Programs\Python\Python313;C:\Users\Kenny\AppData\Local\Programs\Python\Python313\Scripts;C:\Users\Kenny\AppData\Local\Microsoft\WindowsApps;C:\Users\Kenny\AppData\Roaming\npm;C:\Program Files\apache-maven-3.9.11\bin;c:\Users\Kenny\.vscode\extensions\ms-python.debugpy-2025.16.0-win32-x64\bundled\scripts\noConfigScriptsc:\Users\Kenny\.vscode\extensions\vscjava.vscode-java-debug-0.58.3\bundled\scripts\noConfigScripts;."/>
     <property name="maven.conf" value="C:\Program Files\apache-maven-3.9.11/conf"/>
     <property name="jdk.debug" value="release"/>
     <property name="java.class.version" value="61.0"/>
@@ -73,14 +73,14 @@
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceToIdentical" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceSimple" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testStaticReplacePrefixSuffix" time="0"/>
-  <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceRecursive" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceRecursive" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testConstructorMapPrefixSuffix" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testSamePrefixAndSuffix" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testStaticReplace" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceUnknownKey" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceNoPrefixNoSuffix" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testStaticReplaceSystemProperties" time="0"/>
-  <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceInVariableRecursive" time="0.003"/>
+  <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceInVariableRecursive" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testConstructorNoArgs" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceAdjacentAtEnd" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceNull" time="0"/>
@@ -90,9 +90,9 @@
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceEmptyKeys" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceNoVariables" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceComplexEscaping" time="0"/>
-  <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceInVariable" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceInVariable" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplacePrefixNoSuffix" time="0"/>
-  <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testResolveVariable" time="0"/>
+  <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testResolveVariable" time="0.006"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceInVariableDisabled" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testReplaceIncompletePrefix" time="0"/>
   <testcase classname="org.apache.commons.lang3.text.StrSubstitutorTest" name="testGetSetEscape" time="0"/>
