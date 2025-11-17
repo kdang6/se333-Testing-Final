@@ -1,6 +1,10 @@
 import csv
+import os
 from pathlib import Path
-p = Path(r"C:/Users/Kenny/se333-testing-agent/codebase/target/site/jacoco/jacoco.csv")
+
+# Use relative path from repository root
+repo_root = Path(__file__).resolve().parent.parent
+p = repo_root / 'codebase' / 'target' / 'site' / 'jacoco' / 'jacoco.csv'
 if not p.exists():
     print('missing', p)
     raise SystemExit(1)
