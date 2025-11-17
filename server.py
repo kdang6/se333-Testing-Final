@@ -1150,7 +1150,6 @@ def detect_code_smells(file_path: str) -> dict:
             
             # Detect magic numbers
             if stripped and not stripped.startswith('//'):
-                import re
                 # Look for numeric literals (excluding 0, 1, -1)
                 magic_numbers = re.findall(r'\b(?!0\b|1\b|-1\b)\d{2,}\b', stripped)
                 if magic_numbers:
