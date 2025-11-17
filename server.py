@@ -1196,14 +1196,34 @@ def detect_code_smells(file_path: str) -> dict:
                 })
             
             # Detect empty catch blocks
-            if 'catch' in stripped and i + 1 < len(lines) and lines[i].strip() == '}':
-                smells.append({
-                    "type": "Empty Catch Block",
-                    "severity": "high",
-                    "line": i,
-                    "message": "Empty catch block - silently swallowing exceptions",
-                    "suggestion": "At minimum, log the exception or rethrow as RuntimeException"
-                })
+            if 'catch' in stripped:
+                # Find the opening brace for this catch block
+                catch_line_idx = i - 1  # Convert to 0-based index
+                open_brace_idx = catch_line_idx
+                
+                # Look for the opening brace (might be on same line or next line)
+                found_open_brace = False
+                for j in range(catch_line_idx, min(catch_line_idx + 2, len(lines))):
+                    if '{' in lines[j]:
+                        open_brace_idx = j
+                        found_open_brace = True
+                        break
+                
+                if found_open_brace and open_brace_idx + 1 < len(lines):
+                    # Check if the next non-empty/non-comment line after opening brace is a closing brace
+                    for j in range(open_brace_idx + 1, len(lines)):
+                        next_line = lines[j].strip()
+                        # Skip empty lines and comments
+                        if next_line and not next_line.startswith('//'):
+                            if next_line == '}' or next_line.startswith('}'):
+                                smells.append({
+                                    "type": "Empty Catch Block",
+                                    "severity": "high",
+                                    "line": i,
+                                    "message": "Empty catch block - silently swallowing exceptions",
+                                    "suggestion": "At minimum, log the exception or rethrow as RuntimeException"
+                                })
+                            break
         
         return {
             "success": True,
