@@ -175,6 +175,25 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>4.8.3.0</version>
+        <configuration>
+            <effort>Max</effort>
+            <threshold>Low</threshold>
+            <xmlOutput>true</xmlOutput>
+            <failOnError>false</failOnError>
+        </configuration>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>check</goal>
+                </goals>
+            </execution>
+        </executions>
+    </plugin>
     </plugins>
   </build>
   
@@ -189,6 +208,11 @@
           <effort>Default</effort>
           <excludeFilterFile>${basedir}/findbugs-exclude-filter.xml</excludeFilterFile>
         </configuration>
+      </plugin>
+      <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>4.8.3.0</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>

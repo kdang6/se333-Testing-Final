@@ -200,8 +200,8 @@ public class TypeUtils {
 <span class="fc" id="L200">        final Map&lt;TypeVariable&lt;?&gt;, Type&gt; fromTypeVarAssigns = getTypeArguments(type, toClass, null);</span>
 
         // null means the two types are not compatible
-<span class="pc bpc" id="L203" title="1 of 2 branches missed.">        if (fromTypeVarAssigns == null) {</span>
-<span class="nc" id="L204">            return false;</span>
+<span class="fc bfc" id="L203" title="All 2 branches covered.">        if (fromTypeVarAssigns == null) {</span>
+<span class="fc" id="L204">            return false;</span>
         }
 
         // compatible types, but there's no type arguments. this is equivalent
@@ -650,8 +650,8 @@ public class TypeUtils {
     private static Map&lt;TypeVariable&lt;?&gt;, Type&gt; getTypeArguments(Class&lt;?&gt; cls, final Class&lt;?&gt; toClass,
             final Map&lt;TypeVariable&lt;?&gt;, Type&gt; subtypeVarAssigns) {
         // make sure they're assignable
-<span class="pc bpc" id="L653" title="1 of 2 branches missed.">        if (!isAssignable(cls, toClass)) {</span>
-<span class="nc" id="L654">            return null;</span>
+<span class="fc bfc" id="L653" title="All 2 branches covered.">        if (!isAssignable(cls, toClass)) {</span>
+<span class="fc" id="L654">            return null;</span>
         }
 
         // can't work with primitives
@@ -843,11 +843,11 @@ public class TypeUtils {
      * @return true of &lt;code&gt;value&lt;/code&gt; is an instance of &lt;code&gt;type&lt;/code&gt;.
      */
     public static boolean isInstance(final Object value, final Type type) {
-<span class="pc bpc" id="L846" title="1 of 2 branches missed.">        if (type == null) {</span>
-<span class="nc" id="L847">            return false;</span>
+<span class="fc bfc" id="L846" title="All 2 branches covered.">        if (type == null) {</span>
+<span class="fc" id="L847">            return false;</span>
         }
 
-<span class="pc bpc" id="L850" title="5 of 6 branches missed.">        return value == null ? !(type instanceof Class&lt;?&gt;) || !((Class&lt;?&gt;) type).isPrimitive()</span>
+<span class="pc bpc" id="L850" title="1 of 6 branches missed.">        return value == null ? !(type instanceof Class&lt;?&gt;) || !((Class&lt;?&gt;) type).isPrimitive()</span>
 <span class="fc" id="L851">                : isAssignable(value.getClass(), type, null);</span>
     }
 
@@ -884,13 +884,13 @@ public class TypeUtils {
 <span class="fc" id="L884">            boolean subtypeFound = false;</span>
 
 <span class="fc bfc" id="L886" title="All 2 branches covered.">            for (final Type type2 : bounds) {</span>
-<span class="pc bpc" id="L887" title="3 of 4 branches missed.">                if (type1 != type2 &amp;&amp; isAssignable(type2, type1, null)) {</span>
-<span class="nc" id="L888">                    subtypeFound = true;</span>
-<span class="nc" id="L889">                    break;</span>
+<span class="fc bfc" id="L887" title="All 4 branches covered.">                if (type1 != type2 &amp;&amp; isAssignable(type2, type1, null)) {</span>
+<span class="fc" id="L888">                    subtypeFound = true;</span>
+<span class="fc" id="L889">                    break;</span>
                 }
             }
 
-<span class="pc bpc" id="L893" title="1 of 2 branches missed.">            if (!subtypeFound) {</span>
+<span class="fc bfc" id="L893" title="All 2 branches covered.">            if (!subtypeFound) {</span>
 <span class="fc" id="L894">                types.add(type1);</span>
             }
         }
