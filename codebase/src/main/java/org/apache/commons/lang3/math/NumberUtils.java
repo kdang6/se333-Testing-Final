@@ -482,25 +482,20 @@ public class NumberUtils {
                 // 8 significant hex digits may overflow Integer if the high bit is set (e.g. 0x80000000).
                 // Parse as BigInteger and choose Integer if it fits, otherwise use Long.
                 final boolean negative = str.startsWith("-");
-                System.err.println("DEBUG createNumber: str=" + str + " pfxLen=" + pfxLen + " sigLen=" + sigLen + " digits=" + digits);
                 final BigInteger value = new BigInteger(digits, 16);
                 final BigInteger intMax = BigInteger.valueOf(Integer.MAX_VALUE);
-                System.err.println("DEBUG createNumber: value=" + value + " intMax=" + intMax + " cmp=" + value.compareTo(intMax));
                 // For signed interpretation: if value <= Integer.MAX_VALUE then return Integer
                 if (!negative) {
                     if (value.compareTo(intMax) <= 0) {
-                        System.err.println("DEBUG createNumber: returning Integer for " + str);
                         return Integer.valueOf(value.intValue());
                     }
                 } else {
                     // negative hex form like -0x80000000: value is magnitude; convert to negative
                     final BigInteger negValue = value.negate();
                     if (negValue.compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) >= 0) {
-                        System.err.println("DEBUG createNumber: returning Integer (negative) for " + str);
                         return Integer.valueOf(negValue.intValue());
                     }
                 }
-                System.err.println("DEBUG createNumber: returning Long for " + str);
                 try {
                     return createLong(str);
                 } catch (final NumberFormatException nfe) { // fallback to BigInteger when too large for Long

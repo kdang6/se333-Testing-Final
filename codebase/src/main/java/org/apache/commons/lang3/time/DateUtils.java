@@ -405,10 +405,7 @@ public class DateUtils {
                     final Locale localeUsed = (locale == null) ? Locale.getDefault() : locale;
                     final DateFormatSymbols dfs = new DateFormatSymbols(localeUsed);
                     final String[] shortWeekdays = dfs.getShortWeekdays();
-                    final String[] shortMonths = dfs.getShortMonths();
-                    System.err.println("DEBUG parseDateWithLeniency: shortMonths=" + java.util.Arrays.toString(shortMonths));
-                    System.err.println("DEBUG parseDateWithLeniency: localeUsed=" + localeUsed + " pattern=" + pattern + " input=" + str2);
-                    System.err.println("DEBUG parseDateWithLeniency: shortWeekdays=" + java.util.Arrays.toString(shortWeekdays));
+                    
 
                     // Determine if the weekdayToken appears to belong to this locale.
                     boolean weekdayMatchesLocale = false;
@@ -433,16 +430,14 @@ public class DateUtils {
                             final String cand = wd;
                             final String candStripped = cand.endsWith(".") ? cand.substring(0, cand.length() - 1) : cand;
                             final String[] tries = new String[] { cand, cand + ".", candStripped };
-                            for (final String t : tries) {
+                                for (final String t : tries) {
                                 if (t == null || t.length() == 0) {
                                     continue;
                                 }
                                 final String alt = t + rest;
-                                System.err.println("DEBUG parseDateWithLeniency: trying alt='" + alt + "' with pattern='" + pattern + "'");
                                 pos.setIndex(0);
                                 date = parser.parse(alt, pos);
                                 if (date != null && pos.getIndex() == alt.length()) {
-                                    System.err.println("DEBUG parseDateWithLeniency: success alt='" + alt + "'");
                                     return date;
                                 }
                             }
@@ -460,21 +455,17 @@ public class DateUtils {
                                 if (m.endsWith(".")) {
                                     final String mStripped = m.substring(0, m.length() - 1);
                                     final String alt = str2.replace(m, mStripped);
-                                    System.err.println("DEBUG parseDateWithLeniency: trying month-normalized alt='" + alt + "' pattern='" + pattern + "'");
                                     pos.setIndex(0);
                                     final Date d = parser.parse(alt, pos);
                                     if (d != null && pos.getIndex() == alt.length()) {
-                                        System.err.println("DEBUG parseDateWithLeniency: success month-normalized alt='" + alt + "'");
                                         return d;
                                     }
                                     // Also try adding the dot if the input doesn't have it (e.g., 'Apr' -> 'Apr.')
                                     final String altAdd = str2.replace(mStripped, m);
                                     if (!altAdd.equals(alt)) {
-                                        System.err.println("DEBUG parseDateWithLeniency: trying month-normalized altAdd='" + altAdd + "' pattern='" + pattern + "'");
                                         pos.setIndex(0);
                                         final Date d2 = parser.parse(altAdd, pos);
                                         if (d2 != null && pos.getIndex() == altAdd.length()) {
-                                            System.err.println("DEBUG parseDateWithLeniency: success month-normalized altAdd='" + altAdd + "'");
                                             return d2;
                                         }
                                     }
@@ -482,7 +473,7 @@ public class DateUtils {
                             }
                         }
                     } else {
-                        System.err.println("DEBUG parseDateWithLeniency: weekday token '" + weekdayToken + "' does not match locale " + localeUsed + " - skipping weekday fallbacks");
+                        // weekday token does not match locale; skip fallbacks
                     }
                 }
             }
@@ -512,12 +503,10 @@ public class DateUtils {
 
                     if (weekdayMatchesLocale) {
                         final String patternNoWeekday = pattern.replaceFirst("EEE\\s*,?\\s*", "");
-                        System.err.println("DEBUG parseDateWithLeniency: trying without weekday: rest='" + rest + "' pattern='" + patternNoWeekday + "'");
                         parser.applyPattern(patternNoWeekday);
                         pos.setIndex(0);
                         final Date d = parser.parse(rest, pos);
                         if (d != null && pos.getIndex() == rest.length()) {
-                            System.err.println("DEBUG parseDateWithLeniency: success without weekday rest='" + rest + "'");
                             return d;
                         }
                         // Also try parsing the rest with an English parser as a fallback
@@ -527,14 +516,13 @@ public class DateUtils {
                             final ParsePosition pos2 = new ParsePosition(0);
                             final Date d2 = enParser.parse(rest, pos2);
                             if (d2 != null && pos2.getIndex() == rest.length()) {
-                                System.err.println("DEBUG parseDateWithLeniency: success without weekday using English parser rest='" + rest + "'");
                                 return d2;
                             }
                         } catch (final Exception e) {
                             // ignore
                         }
                     } else {
-                        System.err.println("DEBUG parseDateWithLeniency: weekday token '" + weekdayToken + "' does not match locale " + localeUsed + " - skipping without-weekday fallback");
+                        // weekday token does not match locale; skip without-weekday fallback
                     }
                 }
             }
