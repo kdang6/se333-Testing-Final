@@ -1,8 +1,8 @@
 -------------------------------------------------------------------------------
 Test set: org.apache.commons.lang3.time.DateUtilsTest
 -------------------------------------------------------------------------------
-Tests run: 38, Failures: 12, Errors: 5, Skipped: 0, Time elapsed: 0.028 sec <<< FAILURE!
-testLANG799_DE_OK(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.015 sec  <<< ERROR!
+Tests run: 38, Failures: 12, Errors: 5, Skipped: 0, Time elapsed: 0.055 sec <<< FAILURE!
+testLANG799_DE_OK(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.006 sec  <<< ERROR!
 java.text.ParseException: Unable to parse the date: Mi, 09 Apr 2008 23:55:38 GMT
 	at org.apache.commons.lang3.time.DateUtils.parseDateWithLeniency(DateUtils.java:390)
 	at org.apache.commons.lang3.time.DateUtils.parseDate(DateUtils.java:290)
@@ -15,12 +15,12 @@ java.text.ParseException: Unable to parse the date: Mi, 09 Apr 2008 23:55:38 GMT
 	at org.apache.commons.lang3.time.DateUtils.parseDate(DateUtils.java:290)
 	at org.apache.commons.lang3.time.DateUtilsTest.testLANG799_EN_WITH_DE_LOCALE(DateUtilsTest.java:1623)
 
-testRound(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0 sec  <<< ERROR!
+testRound(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.01 sec  <<< ERROR!
 java.lang.NullPointerException: Cannot invoke "org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)" because "org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM" is null
 	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
 	at org.apache.commons.lang3.time.DateUtilsTest.testRound(DateUtilsTest.java:848)
 
-testCeil(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.002 sec  <<< ERROR!
+testCeil(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.005 sec  <<< ERROR!
 java.lang.NullPointerException: Cannot invoke "org.apache.commons.lang3.JavaVersion.atLeast(org.apache.commons.lang3.JavaVersion)" because "org.apache.commons.lang3.SystemUtils.JAVA_SPECIFICATION_VERSION_AS_ENUM" is null
 	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
 	at org.apache.commons.lang3.time.DateUtilsTest.testCeil(DateUtilsTest.java:1427)
@@ -35,7 +35,7 @@ java.lang.AssertionError: expected:<4> but was:<11>
 	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
 	at org.apache.commons.lang3.time.DateUtilsTest.testAddSeconds(DateUtilsTest.java:439)
 
-testSetMinutes(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.001 sec  <<< FAILURE!
+testSetMinutes(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.002 sec  <<< FAILURE!
 java.lang.AssertionError: expected:<4> but was:<11>
 	at org.junit.Assert.fail(Assert.java:88)
 	at org.junit.Assert.failNotEquals(Assert.java:743)
@@ -55,7 +55,7 @@ java.lang.AssertionError: expected:<4> but was:<11>
 	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
 	at org.apache.commons.lang3.time.DateUtilsTest.testAddHours(DateUtilsTest.java:399)
 
-testAddWeeks(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.001 sec  <<< FAILURE!
+testAddWeeks(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0 sec  <<< FAILURE!
 java.lang.AssertionError: expected:<4> but was:<11>
 	at org.junit.Assert.fail(Assert.java:88)
 	at org.junit.Assert.failNotEquals(Assert.java:743)
@@ -80,7 +80,7 @@ java.lang.NullPointerException: Cannot invoke "org.apache.commons.lang3.JavaVers
 	at org.apache.commons.lang3.SystemUtils.isJavaVersionAtLeast(SystemUtils.java:1388)
 	at org.apache.commons.lang3.time.DateUtilsTest.testTruncateLang59(DateUtilsTest.java:1137)
 
-testSetSeconds(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.002 sec  <<< FAILURE!
+testSetSeconds(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0 sec  <<< FAILURE!
 java.lang.AssertionError: expected:<4> but was:<11>
 	at org.junit.Assert.fail(Assert.java:88)
 	at org.junit.Assert.failNotEquals(Assert.java:743)
@@ -100,7 +100,7 @@ java.lang.AssertionError: expected:<4> but was:<11>
 	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
 	at org.apache.commons.lang3.time.DateUtilsTest.testAddMonths(DateUtilsTest.java:339)
 
-testSetMonths(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.001 sec  <<< FAILURE!
+testSetMonths(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.01 sec  <<< FAILURE!
 java.lang.AssertionError: expected:<4> but was:<11>
 	at org.junit.Assert.fail(Assert.java:88)
 	at org.junit.Assert.failNotEquals(Assert.java:743)
@@ -130,7 +130,7 @@ java.lang.AssertionError: expected:<4> but was:<11>
 	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
 	at org.apache.commons.lang3.time.DateUtilsTest.testAddMilliseconds(DateUtilsTest.java:459)
 
-testSetHours(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.001 sec  <<< FAILURE!
+testSetHours(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0 sec  <<< FAILURE!
 java.lang.AssertionError: expected:<4> but was:<11>
 	at org.junit.Assert.fail(Assert.java:88)
 	at org.junit.Assert.failNotEquals(Assert.java:743)
@@ -140,7 +140,7 @@ java.lang.AssertionError: expected:<4> but was:<11>
 	at org.apache.commons.lang3.time.DateUtilsTest.assertDate(DateUtilsTest.java:632)
 	at org.apache.commons.lang3.time.DateUtilsTest.testSetHours(DateUtilsTest.java:543)
 
-testSetYears(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0 sec  <<< FAILURE!
+testSetYears(org.apache.commons.lang3.time.DateUtilsTest)  Time elapsed: 0.005 sec  <<< FAILURE!
 java.lang.AssertionError: expected:<4> but was:<11>
 	at org.junit.Assert.fail(Assert.java:88)
 	at org.junit.Assert.failNotEquals(Assert.java:743)

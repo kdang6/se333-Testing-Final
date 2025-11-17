@@ -64,7 +64,7 @@ Commons Lang,org.apache.commons.lang3.concurrent,MultiBackgroundInitializer.Mult
 Commons Lang,org.apache.commons.lang3.concurrent,CallableBackgroundInitializer,0,31,0,2,0,12,0,5,0,4
 Commons Lang,org.apache.commons.lang3.concurrent,TimedSemaphore.new Runnable() {...},0,10,0,0,0,3,0,2,0,2
 Commons Lang,org.apache.commons.lang3.concurrent,BackgroundInitializer,4,102,0,10,2,31,0,17,0,12
-Commons Lang,org.apache.commons.lang3.concurrent,LazyInitializer,0,28,0,4,0,9,0,4,0,2
+Commons Lang,org.apache.commons.lang3.concurrent,LazyInitializer,0,28,1,3,0,9,1,3,0,2
 Commons Lang,org.apache.commons.lang3.concurrent,AtomicInitializer,4,25,1,3,1,7,1,3,0,2
 Commons Lang,org.apache.commons.lang3.concurrent,ConcurrentException,3,11,0,0,2,4,1,2,1,2
 Commons Lang,org.apache.commons.lang3.concurrent,MultiBackgroundInitializer,0,159,0,14,0,38,0,12,0,5
@@ -136,9 +136,9 @@ Commons Lang,org.apache.commons.lang3.time,FastDateParser.new FastDateParser.Num
 Commons Lang,org.apache.commons.lang3.time,FastDatePrinter.TimeZoneDisplayKey,5,62,5,7,2,14,5,4,0,3
 Commons Lang,org.apache.commons.lang3.time,FastDateParser.new FastDateParser.NumberStrategy() {...},0,8,0,0,0,2,0,2,0,2
 Commons Lang,org.apache.commons.lang3.time,FastDateParser.new FastDateParser.NumberStrategy() {...},0,8,0,0,0,2,0,2,0,2
-Commons Lang,org.apache.commons.lang3.time,FastDatePrinter,51,691,11,91,10,160,10,76,2,23
+Commons Lang,org.apache.commons.lang3.time,FastDatePrinter,51,691,13,89,10,160,12,74,2,23
 Commons Lang,org.apache.commons.lang3.time,DurationFormatUtils.Token,5,112,1,15,1,30,2,15,1,8
-Commons Lang,org.apache.commons.lang3.time,FastDateParser,41,667,10,69,8,142,12,60,2,21
+Commons Lang,org.apache.commons.lang3.time,FastDateParser,41,667,9,70,8,142,11,61,2,21
 Commons Lang,org.apache.commons.lang3.time,DateUtils,67,1394,22,196,12,298,24,152,4,56
 Commons Lang,org.apache.commons.lang3.time,FastDatePrinter.UnpaddedNumberField,0,55,0,4,0,13,0,6,0,4
 Commons Lang,org.apache.commons.lang3.time,DateUtils.DateIterator,0,44,0,2,0,11,0,5,0,4

@@ -1,14 +1,13 @@
 -------------------------------------------------------------------------------
 Test set: org.apache.commons.lang3.builder.CompareToBuilderTest
 -------------------------------------------------------------------------------
-Tests run: 48, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 0.015 sec <<< FAILURE!
-testReflectionHierarchyCompareExcludeFields(org.apache.commons.lang3.builder.CompareToBuilderTest)  Time elapsed: 0.011 sec  <<< ERROR!
-java.lang.reflect.InaccessibleObjectException: Unable to make field private final byte[] java.lang.String.value accessible: module java.base does not "opens java.lang" to unnamed module @4b9e13df
-	at java.base/java.lang.reflect.AccessibleObject.throwInaccessibleObjectException(AccessibleObject.java:353)
-	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:329)
-	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:277)
-	at java.base/java.lang.reflect.Field.checkCanSetAccessible(Field.java:179)
-	at java.base/java.lang.reflect.AccessibleObject.setAccessible(AccessibleObject.java:107)
+Tests run: 48, Failures: 0, Errors: 3, Skipped: 0, Time elapsed: 0.03 sec <<< FAILURE!
+testReflectionHierarchyCompareExcludeFields(org.apache.commons.lang3.builder.CompareToBuilderTest)  Time elapsed: 0.021 sec  <<< ERROR!
+java.lang.reflect.InaccessibleObjectException: Unable to make field private final byte[] java.lang.String.value accessible: module java.base does not "opens java.lang" to unnamed module @28d25987
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:354)
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:297)
+	at java.base/java.lang.reflect.Field.checkCanSetAccessible(Field.java:178)
+	at java.base/java.lang.reflect.AccessibleObject.setAccessible(AccessibleObject.java:130)
 	at org.apache.commons.lang3.builder.CompareToBuilder.reflectionAppend(CompareToBuilder.java:314)
 	at org.apache.commons.lang3.builder.CompareToBuilder.reflectionCompare(CompareToBuilder.java:286)
 	at org.apache.commons.lang3.builder.CompareToBuilder.reflectionCompare(CompareToBuilder.java:167)
@@ -18,12 +17,11 @@ java.lang.reflect.InaccessibleObjectException: Unable to make field private fina
 	at org.apache.commons.lang3.builder.CompareToBuilderTest.testReflectionHierarchyCompareExcludeFields(CompareToBuilderTest.java:133)
 
 testReflectionHierarchyCompare(org.apache.commons.lang3.builder.CompareToBuilderTest)  Time elapsed: 0 sec  <<< ERROR!
-java.lang.reflect.InaccessibleObjectException: Unable to make field private final byte[] java.lang.String.value accessible: module java.base does not "opens java.lang" to unnamed module @4b9e13df
-	at java.base/java.lang.reflect.AccessibleObject.throwInaccessibleObjectException(AccessibleObject.java:353)
-	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:329)
-	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:277)
-	at java.base/java.lang.reflect.Field.checkCanSetAccessible(Field.java:179)
-	at java.base/java.lang.reflect.AccessibleObject.setAccessible(AccessibleObject.java:107)
+java.lang.reflect.InaccessibleObjectException: Unable to make field private final byte[] java.lang.String.value accessible: module java.base does not "opens java.lang" to unnamed module @28d25987
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:354)
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:297)
+	at java.base/java.lang.reflect.Field.checkCanSetAccessible(Field.java:178)
+	at java.base/java.lang.reflect.AccessibleObject.setAccessible(AccessibleObject.java:130)
 	at org.apache.commons.lang3.builder.CompareToBuilder.reflectionAppend(CompareToBuilder.java:314)
 	at org.apache.commons.lang3.builder.CompareToBuilder.reflectionCompare(CompareToBuilder.java:286)
 	at org.apache.commons.lang3.builder.CompareToBuilder.reflectionCompare(CompareToBuilder.java:167)
@@ -32,13 +30,12 @@ java.lang.reflect.InaccessibleObjectException: Unable to make field private fina
 	at org.apache.commons.lang3.builder.CompareToBuilderTest.testReflectionHierarchyCompare(CompareToBuilderTest.java:195)
 	at org.apache.commons.lang3.builder.CompareToBuilderTest.testReflectionHierarchyCompare(CompareToBuilderTest.java:127)
 
-testReflectionHierarchyCompareTransients(org.apache.commons.lang3.builder.CompareToBuilderTest)  Time elapsed: 0.002 sec  <<< ERROR!
-java.lang.reflect.InaccessibleObjectException: Unable to make field private final byte[] java.lang.String.value accessible: module java.base does not "opens java.lang" to unnamed module @4b9e13df
-	at java.base/java.lang.reflect.AccessibleObject.throwInaccessibleObjectException(AccessibleObject.java:353)
-	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:329)
-	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:277)
-	at java.base/java.lang.reflect.Field.checkCanSetAccessible(Field.java:179)
-	at java.base/java.lang.reflect.AccessibleObject.setAccessible(AccessibleObject.java:107)
+testReflectionHierarchyCompareTransients(org.apache.commons.lang3.builder.CompareToBuilderTest)  Time elapsed: 0 sec  <<< ERROR!
+java.lang.reflect.InaccessibleObjectException: Unable to make field private final byte[] java.lang.String.value accessible: module java.base does not "opens java.lang" to unnamed module @28d25987
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:354)
+	at java.base/java.lang.reflect.AccessibleObject.checkCanSetAccessible(AccessibleObject.java:297)
+	at java.base/java.lang.reflect.Field.checkCanSetAccessible(Field.java:178)
+	at java.base/java.lang.reflect.AccessibleObject.setAccessible(AccessibleObject.java:130)
 	at org.apache.commons.lang3.builder.CompareToBuilder.reflectionAppend(CompareToBuilder.java:314)
 	at org.apache.commons.lang3.builder.CompareToBuilder.reflectionCompare(CompareToBuilder.java:286)
 	at org.apache.commons.lang3.builder.CompareToBuilder.reflectionCompare(CompareToBuilder.java:167)
