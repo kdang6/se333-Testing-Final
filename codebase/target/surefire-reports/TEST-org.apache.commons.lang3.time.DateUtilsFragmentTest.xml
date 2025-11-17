@@ -80,7 +80,7 @@
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testSecondsofHourWithCalendar" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testNullDate" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMillisecondsOfMonthWithCalendar" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMinutesOfDayWithDate" time="0"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMinutesOfDayWithDate" time="0.001"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testDateFragmentInLargerUnitWithDate" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMillisecondsOfYearWithDate" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testSecondsofMinuteWithDate" time="0"/>
@@ -106,7 +106,7 @@
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testNullCalendar" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMinutesOfDayWithCalendar" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMillisecondsOfHourWithDate" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testSecondsOfMonthWithCalendar" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testSecondsOfMonthWithCalendar" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testSecondFragmentInLargerUnitWithCalendar" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMinutesOfYearWithCalendar" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.DateUtilsFragmentTest" name="testMillisecondsOfMinuteWithCalender" time="0"/>

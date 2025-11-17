@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="48" failures="0" name="org.apache.commons.lang3.builder.CompareToBuilderTest" time="0.011" errors="0" skipped="0">
+<testsuite tests="48" failures="0" name="org.apache.commons.lang3.builder.CompareToBuilderTest" time="0.026" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -65,11 +65,11 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testCharArray" time="0.001"/>
-  <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testObjectArray" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testCharArray" time="0.009"/>
+  <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testObjectArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testObjectBuild" time="0"/>
   <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testFloatArray" time="0"/>
-  <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testReflectionHierarchyCompareExcludeFields" time="0.007"/>
+  <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testReflectionHierarchyCompareExcludeFields" time="0.011"/>
   <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testObjectComparatorNull" time="0"/>
   <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testReflectionHierarchyCompare" time="0"/>
   <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testMultiCharArray" time="0"/>
@@ -100,7 +100,7 @@
   <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testBooleanArrayHiddenByObject" time="0"/>
   <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testIntArrayHiddenByObject" time="0"/>
   <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testLongArray" time="0"/>
-  <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testReflectionHierarchyCompareTransients" time="0.002"/>
+  <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testReflectionHierarchyCompareTransients" time="0.006"/>
   <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testShortArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testMultiLongArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.builder.CompareToBuilderTest" name="testFloatArrayHiddenByObject" time="0"/>

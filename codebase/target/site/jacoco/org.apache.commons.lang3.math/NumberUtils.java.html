@@ -464,162 +464,189 @@ public class NumberUtils {
             }
         }
 <span class="fc bfc" id="L466" title="All 2 branches covered.">        if (pfxLen &gt; 0) { // we have a hex number</span>
-<span class="fc" id="L467">            final int hexDigits = str.length() - pfxLen;</span>
-<span class="fc bfc" id="L468" title="All 2 branches covered.">            if (hexDigits &gt; 16) { // too many for Long</span>
-<span class="fc" id="L469">                return createBigInteger(str);</span>
+<span class="fc" id="L467">            final String digits = str.substring(pfxLen);</span>
+            // Trim leading zeros when counting significant hex digits (leading zeros shouldn't force a wider type)
+<span class="fc" id="L469">            final String sigDigits = digits.replaceFirst(&quot;^0+(?=[0-9A-Fa-f])&quot;, &quot;&quot;);</span>
+<span class="pc bpc" id="L470" title="1 of 2 branches missed.">            final int sigLen = sigDigits.length() == 0 ? 1 : sigDigits.length();</span>
+<span class="fc bfc" id="L471" title="All 2 branches covered.">            if (sigLen &gt; 16) { // too many for Long</span>
+<span class="fc" id="L472">                return createBigInteger(str);</span>
             }
-<span class="fc bfc" id="L471" title="All 2 branches covered.">            if (hexDigits &gt; 8) { // too many for an int</span>
-<span class="fc" id="L472">                return createLong(str);</span>
-            }
-<span class="fc bfc" id="L474" title="All 2 branches covered.">            if (hexDigits == 8) {</span>
-                // 8 hex digits may overflow Integer if the high bit is set (e.g. 0x80000000).
-                // Try to create an Integer first and fall back to Long on overflow.
+<span class="fc bfc" id="L474" title="All 2 branches covered.">            if (sigLen &gt; 8) { // too many for an int</span>
                 try {
-<span class="fc" id="L478">                    return createInteger(str);</span>
-<span class="fc" id="L479">                } catch (final NumberFormatException ex) {</span>
-<span class="fc" id="L480">                    return createLong(str);</span>
+<span class="fc" id="L476">                    return createLong(str);</span>
+<span class="fc" id="L477">                } catch (final NumberFormatException nfe) {</span>
+<span class="fc" id="L478">                    return createBigInteger(str);</span>
                 }
             }
-<span class="fc" id="L483">            return createInteger(str);</span>
+<span class="fc bfc" id="L481" title="All 2 branches covered.">            if (sigLen == 8) {</span>
+                // 8 significant hex digits may overflow Integer if the high bit is set (e.g. 0x80000000).
+                // Parse as BigInteger and choose Integer if it fits, otherwise use Long.
+<span class="fc" id="L484">                final boolean negative = str.startsWith(&quot;-&quot;);</span>
+<span class="fc" id="L485">                System.err.println(&quot;DEBUG createNumber: str=&quot; + str + &quot; pfxLen=&quot; + pfxLen + &quot; sigLen=&quot; + sigLen + &quot; digits=&quot; + digits);</span>
+<span class="fc" id="L486">                final BigInteger value = new BigInteger(digits, 16);</span>
+<span class="fc" id="L487">                final BigInteger intMax = BigInteger.valueOf(Integer.MAX_VALUE);</span>
+<span class="fc" id="L488">                System.err.println(&quot;DEBUG createNumber: value=&quot; + value + &quot; intMax=&quot; + intMax + &quot; cmp=&quot; + value.compareTo(intMax));</span>
+                // For signed interpretation: if value &lt;= Integer.MAX_VALUE then return Integer
+<span class="pc bpc" id="L490" title="1 of 2 branches missed.">                if (!negative) {</span>
+<span class="fc bfc" id="L491" title="All 2 branches covered.">                    if (value.compareTo(intMax) &lt;= 0) {</span>
+<span class="fc" id="L492">                        System.err.println(&quot;DEBUG createNumber: returning Integer for &quot; + str);</span>
+<span class="fc" id="L493">                        return Integer.valueOf(value.intValue());</span>
+                    }
+                } else {
+                    // negative hex form like -0x80000000: value is magnitude; convert to negative
+<span class="nc" id="L497">                    final BigInteger negValue = value.negate();</span>
+<span class="nc bnc" id="L498" title="All 2 branches missed.">                    if (negValue.compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) &gt;= 0) {</span>
+<span class="nc" id="L499">                        System.err.println(&quot;DEBUG createNumber: returning Integer (negative) for &quot; + str);</span>
+<span class="nc" id="L500">                        return Integer.valueOf(negValue.intValue());</span>
+                    }
+                }
+<span class="fc" id="L503">                System.err.println(&quot;DEBUG createNumber: returning Long for &quot; + str);</span>
+                try {
+<span class="fc" id="L505">                    return createLong(str);</span>
+<span class="nc" id="L506">                } catch (final NumberFormatException nfe) { // fallback to BigInteger when too large for Long</span>
+<span class="nc" id="L507">                    return createBigInteger(str);</span>
+                }
+            }
+<span class="fc" id="L510">            return createInteger(str);</span>
         }
-<span class="fc" id="L485">        final char lastChar = str.charAt(str.length() - 1);</span>
+<span class="fc" id="L512">        final char lastChar = str.charAt(str.length() - 1);</span>
         String mant;
         String dec;
         String exp;
-<span class="fc" id="L489">        final int decPos = str.indexOf('.');</span>
-<span class="fc" id="L490">        final int expPos = str.indexOf('e') + str.indexOf('E') + 1; // assumes both not present</span>
+<span class="fc" id="L516">        final int decPos = str.indexOf('.');</span>
+<span class="fc" id="L517">        final int expPos = str.indexOf('e') + str.indexOf('E') + 1; // assumes both not present</span>
         // if both e and E are present, this is caught by the checks on expPos (which prevent IOOBE)
         // and the parsing which will detect if e or E appear in a number due to using the wrong offset
 
-<span class="fc" id="L494">        int numDecimals = 0; // Check required precision (LANG-693)</span>
-<span class="fc bfc" id="L495" title="All 2 branches covered.">        if (decPos &gt; -1) { // there is a decimal point</span>
+<span class="fc" id="L521">        int numDecimals = 0; // Check required precision (LANG-693)</span>
+<span class="fc bfc" id="L522" title="All 2 branches covered.">        if (decPos &gt; -1) { // there is a decimal point</span>
 
-<span class="fc bfc" id="L497" title="All 2 branches covered.">            if (expPos &gt; -1) { // there is an exponent</span>
-<span class="fc bfc" id="L498" title="All 4 branches covered.">                if (expPos &lt; decPos || expPos &gt; str.length()) { // prevents double exponent causing IOOBE</span>
-<span class="fc" id="L499">                    throw new NumberFormatException(str + &quot; is not a valid number.&quot;);</span>
+<span class="fc bfc" id="L524" title="All 2 branches covered.">            if (expPos &gt; -1) { // there is an exponent</span>
+<span class="fc bfc" id="L525" title="All 4 branches covered.">                if (expPos &lt; decPos || expPos &gt; str.length()) { // prevents double exponent causing IOOBE</span>
+<span class="fc" id="L526">                    throw new NumberFormatException(str + &quot; is not a valid number.&quot;);</span>
                 }
-<span class="fc" id="L501">                dec = str.substring(decPos + 1, expPos);</span>
+<span class="fc" id="L528">                dec = str.substring(decPos + 1, expPos);</span>
             } else {
-<span class="fc" id="L503">                dec = str.substring(decPos + 1);</span>
+<span class="fc" id="L530">                dec = str.substring(decPos + 1);</span>
             }
-<span class="fc" id="L505">            mant = str.substring(0, decPos);</span>
-<span class="fc" id="L506">            numDecimals = dec.length(); // gets number of digits past the decimal to ensure no loss of precision for floating point numbers.</span>
+<span class="fc" id="L532">            mant = str.substring(0, decPos);</span>
+<span class="fc" id="L533">            numDecimals = dec.length(); // gets number of digits past the decimal to ensure no loss of precision for floating point numbers.</span>
         } else {
-<span class="fc bfc" id="L508" title="All 2 branches covered.">            if (expPos &gt; -1) {</span>
-<span class="fc bfc" id="L509" title="All 2 branches covered.">                if (expPos &gt; str.length()) { // prevents double exponent causing IOOBE</span>
-<span class="fc" id="L510">                    throw new NumberFormatException(str + &quot; is not a valid number.&quot;);</span>
+<span class="fc bfc" id="L535" title="All 2 branches covered.">            if (expPos &gt; -1) {</span>
+<span class="fc bfc" id="L536" title="All 2 branches covered.">                if (expPos &gt; str.length()) { // prevents double exponent causing IOOBE</span>
+<span class="fc" id="L537">                    throw new NumberFormatException(str + &quot; is not a valid number.&quot;);</span>
                 }
-<span class="fc" id="L512">                mant = str.substring(0, expPos);</span>
+<span class="fc" id="L539">                mant = str.substring(0, expPos);</span>
             } else {
-<span class="fc" id="L514">                mant = str;</span>
+<span class="fc" id="L541">                mant = str;</span>
             }
-<span class="fc" id="L516">            dec = null;</span>
+<span class="fc" id="L543">            dec = null;</span>
         }
-<span class="fc bfc" id="L518" title="All 4 branches covered.">        if (!Character.isDigit(lastChar) &amp;&amp; lastChar != '.') {</span>
-<span class="fc bfc" id="L519" title="All 4 branches covered.">            if (expPos &gt; -1 &amp;&amp; expPos &lt; str.length() - 1) {</span>
-<span class="fc" id="L520">                exp = str.substring(expPos + 1, str.length() - 1);</span>
+<span class="fc bfc" id="L545" title="All 4 branches covered.">        if (!Character.isDigit(lastChar) &amp;&amp; lastChar != '.') {</span>
+<span class="fc bfc" id="L546" title="All 4 branches covered.">            if (expPos &gt; -1 &amp;&amp; expPos &lt; str.length() - 1) {</span>
+<span class="fc" id="L547">                exp = str.substring(expPos + 1, str.length() - 1);</span>
             } else {
-<span class="fc" id="L522">                exp = null;</span>
+<span class="fc" id="L549">                exp = null;</span>
             }
             //Requesting a specific type..
-<span class="fc" id="L525">            final String numeric = str.substring(0, str.length() - 1);</span>
-<span class="pc bpc" id="L526" title="3 of 4 branches missed.">            final boolean allZeros = isAllZeros(mant) &amp;&amp; isAllZeros(exp);</span>
-<span class="fc bfc" id="L527" title="All 4 branches covered.">            switch (lastChar) {</span>
+<span class="fc" id="L552">            final String numeric = str.substring(0, str.length() - 1);</span>
+<span class="pc bpc" id="L553" title="3 of 4 branches missed.">            final boolean allZeros = isAllZeros(mant) &amp;&amp; isAllZeros(exp);</span>
+<span class="fc bfc" id="L554" title="All 4 branches covered.">            switch (lastChar) {</span>
                 case 'l' :
                 case 'L' :
-<span class="pc bpc" id="L530" title="1 of 4 branches missed.">                    if (dec == null</span>
+<span class="pc bpc" id="L557" title="1 of 4 branches missed.">                    if (dec == null</span>
                         &amp;&amp; exp == null
-<span class="pc bpc" id="L532" title="2 of 6 branches missed.">                        &amp;&amp; (numeric.charAt(0) == '-' &amp;&amp; isDigits(numeric.substring(1)) || isDigits(numeric))) {</span>
+<span class="pc bpc" id="L559" title="2 of 6 branches missed.">                        &amp;&amp; (numeric.charAt(0) == '-' &amp;&amp; isDigits(numeric.substring(1)) || isDigits(numeric))) {</span>
                         try {
-<span class="fc" id="L534">                            return createLong(numeric);</span>
-<span class="fc" id="L535">                        } catch (final NumberFormatException nfe) { // NOPMD</span>
+<span class="fc" id="L561">                            return createLong(numeric);</span>
+<span class="fc" id="L562">                        } catch (final NumberFormatException nfe) { // NOPMD</span>
                             // Too big for a long
                         }
-<span class="fc" id="L538">                        return createBigInteger(numeric);</span>
+<span class="fc" id="L565">                        return createBigInteger(numeric);</span>
 
                     }
-<span class="fc" id="L541">                    throw new NumberFormatException(str + &quot; is not a valid number.&quot;);</span>
+<span class="fc" id="L568">                    throw new NumberFormatException(str + &quot; is not a valid number.&quot;);</span>
                 case 'f' :
                 case 'F' :
                     try {
-<span class="fc" id="L545">                        final Float f = NumberUtils.createFloat(numeric);</span>
-<span class="pc bpc" id="L546" title="2 of 6 branches missed.">                        if (!(f.isInfinite() || (f.floatValue() == 0.0F &amp;&amp; !allZeros))) {</span>
+<span class="fc" id="L572">                        final Float f = NumberUtils.createFloat(numeric);</span>
+<span class="pc bpc" id="L573" title="2 of 6 branches missed.">                        if (!(f.isInfinite() || (f.floatValue() == 0.0F &amp;&amp; !allZeros))) {</span>
                             //If it's too big for a float or the float value = 0 and the string
                             //has non-zeros in it, then float does not have the precision we want
-<span class="fc" id="L549">                            return f;</span>
+<span class="fc" id="L576">                            return f;</span>
                         }
 
-<span class="fc" id="L552">                    } catch (final NumberFormatException nfe) { // NOPMD</span>
+<span class="fc" id="L579">                    } catch (final NumberFormatException nfe) { // NOPMD</span>
                         // ignore the bad number
-<span class="fc" id="L554">                    }</span>
+<span class="fc" id="L581">                    }</span>
                     //$FALL-THROUGH$
                 case 'd' :
                 case 'D' :
                     try {
-<span class="fc" id="L559">                        final Double d = NumberUtils.createDouble(numeric);</span>
-<span class="pc bpc" id="L560" title="2 of 6 branches missed.">                        if (!(d.isInfinite() || (d.floatValue() == 0.0D &amp;&amp; !allZeros))) {</span>
-<span class="fc" id="L561">                            return d;</span>
+<span class="fc" id="L586">                        final Double d = NumberUtils.createDouble(numeric);</span>
+<span class="pc bpc" id="L587" title="2 of 6 branches missed.">                        if (!(d.isInfinite() || (d.floatValue() == 0.0D &amp;&amp; !allZeros))) {</span>
+<span class="fc" id="L588">                            return d;</span>
                         }
-<span class="fc" id="L563">                    } catch (final NumberFormatException nfe) { // NOPMD</span>
+<span class="fc" id="L590">                    } catch (final NumberFormatException nfe) { // NOPMD</span>
                         // ignore the bad number
-<span class="fc" id="L565">                    }</span>
+<span class="fc" id="L592">                    }</span>
                     try {
-<span class="fc" id="L567">                        return createBigDecimal(numeric);</span>
-<span class="fc" id="L568">                    } catch (final NumberFormatException e) { // NOPMD</span>
+<span class="fc" id="L594">                        return createBigDecimal(numeric);</span>
+<span class="fc" id="L595">                    } catch (final NumberFormatException e) { // NOPMD</span>
                         // ignore the bad number
                     }
                     //$FALL-THROUGH$
                 default :
-<span class="fc" id="L573">                    throw new NumberFormatException(str + &quot; is not a valid number.&quot;);</span>
+<span class="fc" id="L600">                    throw new NumberFormatException(str + &quot; is not a valid number.&quot;);</span>
 
             }
         }
         //User doesn't have a preference on the return type, so let's start
         //small and go from there...
-<span class="pc bpc" id="L579" title="1 of 4 branches missed.">        if (expPos &gt; -1 &amp;&amp; expPos &lt; str.length() - 1) {</span>
-<span class="fc" id="L580">            exp = str.substring(expPos + 1, str.length());</span>
+<span class="pc bpc" id="L606" title="1 of 4 branches missed.">        if (expPos &gt; -1 &amp;&amp; expPos &lt; str.length() - 1) {</span>
+<span class="fc" id="L607">            exp = str.substring(expPos + 1, str.length());</span>
         } else {
-<span class="fc" id="L582">            exp = null;</span>
+<span class="fc" id="L609">            exp = null;</span>
         }
-<span class="fc bfc" id="L584" title="All 4 branches covered.">        if (dec == null &amp;&amp; exp == null) { // no decimal point and no exponent</span>
+<span class="fc bfc" id="L611" title="All 4 branches covered.">        if (dec == null &amp;&amp; exp == null) { // no decimal point and no exponent</span>
             //Must be an Integer, Long, Biginteger
             try {
-<span class="fc" id="L587">                return createInteger(str);</span>
-<span class="fc" id="L588">            } catch (final NumberFormatException nfe) { // NOPMD</span>
+<span class="fc" id="L614">                return createInteger(str);</span>
+<span class="fc" id="L615">            } catch (final NumberFormatException nfe) { // NOPMD</span>
                 // ignore the bad number
             }
             try {
-<span class="fc" id="L592">                return createLong(str);</span>
-<span class="fc" id="L593">            } catch (final NumberFormatException nfe) { // NOPMD</span>
+<span class="fc" id="L619">                return createLong(str);</span>
+<span class="fc" id="L620">            } catch (final NumberFormatException nfe) { // NOPMD</span>
                 // ignore the bad number
             }
-<span class="fc" id="L596">            return createBigInteger(str);</span>
+<span class="fc" id="L623">            return createBigInteger(str);</span>
         }
 
         //Must be a Float, Double, BigDecimal
-<span class="pc bpc" id="L600" title="3 of 4 branches missed.">        final boolean allZeros = isAllZeros(mant) &amp;&amp; isAllZeros(exp);</span>
+<span class="pc bpc" id="L627" title="3 of 4 branches missed.">        final boolean allZeros = isAllZeros(mant) &amp;&amp; isAllZeros(exp);</span>
         try {
-<span class="fc bfc" id="L602" title="All 2 branches covered.">            if(numDecimals &lt;= 7){// If number has 7 or fewer digits past the decimal point then make it a float</span>
-<span class="fc" id="L603">                final Float f = createFloat(str);</span>
-<span class="pc bpc" id="L604" title="1 of 6 branches missed.">                if (!(f.isInfinite() || (f.floatValue() == 0.0F &amp;&amp; !allZeros))) {</span>
-<span class="fc" id="L605">                    return f;</span>
+<span class="fc bfc" id="L629" title="All 2 branches covered.">            if(numDecimals &lt;= 7){// If number has 7 or fewer digits past the decimal point then make it a float</span>
+<span class="fc" id="L630">                final Float f = createFloat(str);</span>
+<span class="pc bpc" id="L631" title="1 of 6 branches missed.">                if (!(f.isInfinite() || (f.floatValue() == 0.0F &amp;&amp; !allZeros))) {</span>
+<span class="fc" id="L632">                    return f;</span>
                 }
             }
-<span class="fc" id="L608">        } catch (final NumberFormatException nfe) { // NOPMD</span>
+<span class="fc" id="L635">        } catch (final NumberFormatException nfe) { // NOPMD</span>
             // ignore the bad number
-<span class="fc" id="L610">        }</span>
+<span class="fc" id="L637">        }</span>
         try {
-<span class="fc bfc" id="L612" title="All 2 branches covered.">            if(numDecimals &lt;= 16){// If number has between 8 and 16 digits past the decimal point then make it a double</span>
-<span class="fc" id="L613">                final Double d = createDouble(str);</span>
-<span class="pc bpc" id="L614" title="3 of 6 branches missed.">                if (!(d.isInfinite() || (d.doubleValue() == 0.0D &amp;&amp; !allZeros))) {</span>
-<span class="fc" id="L615">                    return d;</span>
+<span class="fc bfc" id="L639" title="All 2 branches covered.">            if(numDecimals &lt;= 16){// If number has between 8 and 16 digits past the decimal point then make it a double</span>
+<span class="fc" id="L640">                final Double d = createDouble(str);</span>
+<span class="pc bpc" id="L641" title="3 of 6 branches missed.">                if (!(d.isInfinite() || (d.doubleValue() == 0.0D &amp;&amp; !allZeros))) {</span>
+<span class="fc" id="L642">                    return d;</span>
                 }
             }
-<span class="fc" id="L618">        } catch (final NumberFormatException nfe) { // NOPMD</span>
+<span class="fc" id="L645">        } catch (final NumberFormatException nfe) { // NOPMD</span>
             // ignore the bad number
-<span class="fc" id="L620">        }</span>
+<span class="fc" id="L647">        }</span>
 
-<span class="fc" id="L622">        return createBigDecimal(str);</span>
+<span class="fc" id="L649">        return createBigDecimal(str);</span>
     }
 
     /**
@@ -631,15 +658,15 @@ public class NumberUtils {
      * @return if it is all zeros or &lt;code&gt;null&lt;/code&gt;
      */
     private static boolean isAllZeros(final String str) {
-<span class="pc bpc" id="L634" title="1 of 2 branches missed.">        if (str == null) {</span>
-<span class="nc" id="L635">            return true;</span>
+<span class="pc bpc" id="L661" title="1 of 2 branches missed.">        if (str == null) {</span>
+<span class="nc" id="L662">            return true;</span>
         }
-<span class="pc bfc" id="L637" title="All 2 branches covered.">        for (int i = str.length() - 1; i &gt;= 0; i--) {</span>
-<span class="pc bpc" id="L638" title="1 of 2 branches missed.">            if (str.charAt(i) != '0') {</span>
-<span class="fc" id="L639">                return false;</span>
+<span class="pc bfc" id="L664" title="All 2 branches covered.">        for (int i = str.length() - 1; i &gt;= 0; i--) {</span>
+<span class="pc bpc" id="L665" title="1 of 2 branches missed.">            if (str.charAt(i) != '0') {</span>
+<span class="fc" id="L666">                return false;</span>
             }
         }
-<span class="pc bpc" id="L642" title="1 of 2 branches missed.">        return str.length() &gt; 0;</span>
+<span class="pc bpc" id="L669" title="1 of 2 branches missed.">        return str.length() &gt; 0;</span>
     }
 
     //-----------------------------------------------------------------------
@@ -653,10 +680,10 @@ public class NumberUtils {
      * @throws NumberFormatException if the value cannot be converted
      */
     public static Float createFloat(final String str) {
-<span class="fc bfc" id="L656" title="All 2 branches covered.">        if (str == null) {</span>
-<span class="fc" id="L657">            return null;</span>
+<span class="fc bfc" id="L683" title="All 2 branches covered.">        if (str == null) {</span>
+<span class="fc" id="L684">            return null;</span>
         }
-<span class="fc" id="L659">        return Float.valueOf(str);</span>
+<span class="fc" id="L686">        return Float.valueOf(str);</span>
     }
 
     /**
@@ -669,10 +696,10 @@ public class NumberUtils {
      * @throws NumberFormatException if the value cannot be converted
      */
     public static Double createDouble(final String str) {
-<span class="fc bfc" id="L672" title="All 2 branches covered.">        if (str == null) {</span>
-<span class="fc" id="L673">            return null;</span>
+<span class="fc bfc" id="L699" title="All 2 branches covered.">        if (str == null) {</span>
+<span class="fc" id="L700">            return null;</span>
         }
-<span class="fc" id="L675">        return Double.valueOf(str);</span>
+<span class="fc" id="L702">        return Double.valueOf(str);</span>
     }
 
     /**
@@ -686,11 +713,11 @@ public class NumberUtils {
      * @throws NumberFormatException if the value cannot be converted
      */
     public static Integer createInteger(final String str) {
-<span class="fc bfc" id="L689" title="All 2 branches covered.">        if (str == null) {</span>
-<span class="fc" id="L690">            return null;</span>
+<span class="fc bfc" id="L716" title="All 2 branches covered.">        if (str == null) {</span>
+<span class="fc" id="L717">            return null;</span>
         }
         // decode() handles 0xAABD and 0777 (hex and octal) as well.
-<span class="fc" id="L693">        return Integer.decode(str);</span>
+<span class="fc" id="L720">        return Integer.decode(str);</span>
     }
 
     /**
@@ -704,10 +731,10 @@ public class NumberUtils {
      * @throws NumberFormatException if the value cannot be converted
      */
     public static Long createLong(final String str) {
-<span class="fc bfc" id="L707" title="All 2 branches covered.">        if (str == null) {</span>
-<span class="fc" id="L708">            return null;</span>
+<span class="fc bfc" id="L734" title="All 2 branches covered.">        if (str == null) {</span>
+<span class="fc" id="L735">            return null;</span>
         }
-<span class="fc" id="L710">        return Long.decode(str);</span>
+<span class="fc" id="L737">        return Long.decode(str);</span>
     }
 
     /**
@@ -721,29 +748,29 @@ public class NumberUtils {
      * @throws NumberFormatException if the value cannot be converted
      */
     public static BigInteger createBigInteger(final String str) {
-<span class="fc bfc" id="L724" title="All 2 branches covered.">        if (str == null) {</span>
-<span class="fc" id="L725">            return null;</span>
+<span class="fc bfc" id="L751" title="All 2 branches covered.">        if (str == null) {</span>
+<span class="fc" id="L752">            return null;</span>
         }
-<span class="fc" id="L727">        int pos = 0; // offset within string</span>
-<span class="fc" id="L728">        int radix = 10;</span>
-<span class="fc" id="L729">        boolean negate = false; // need to negate later?</span>
-<span class="fc bfc" id="L730" title="All 2 branches covered.">        if (str.startsWith(&quot;-&quot;)) {</span>
-<span class="fc" id="L731">            negate = true;</span>
-<span class="fc" id="L732">            pos = 1;</span>
+<span class="fc" id="L754">        int pos = 0; // offset within string</span>
+<span class="fc" id="L755">        int radix = 10;</span>
+<span class="fc" id="L756">        boolean negate = false; // need to negate later?</span>
+<span class="fc bfc" id="L757" title="All 2 branches covered.">        if (str.startsWith(&quot;-&quot;)) {</span>
+<span class="fc" id="L758">            negate = true;</span>
+<span class="fc" id="L759">            pos = 1;</span>
         }
-<span class="pc bpc" id="L734" title="1 of 4 branches missed.">        if (str.startsWith(&quot;0x&quot;, pos) || str.startsWith(&quot;0x&quot;, pos)) { // hex</span>
-<span class="fc" id="L735">            radix = 16;</span>
-<span class="fc" id="L736">            pos += 2;</span>
-<span class="fc bfc" id="L737" title="All 2 branches covered.">        } else if (str.startsWith(&quot;#&quot;, pos)) { // alternative hex (allowed by Long/Integer)</span>
-<span class="fc" id="L738">            radix = 16;</span>
-<span class="fc" id="L739">            pos ++;</span>
-<span class="fc bfc" id="L740" title="All 4 branches covered.">        } else if (str.startsWith(&quot;0&quot;, pos) &amp;&amp; str.length() &gt; pos + 1) { // octal; so long as there are additional digits</span>
-<span class="fc" id="L741">            radix = 8;</span>
-<span class="fc" id="L742">            pos ++;</span>
+<span class="pc bpc" id="L761" title="1 of 4 branches missed.">        if (str.startsWith(&quot;0x&quot;, pos) || str.startsWith(&quot;0x&quot;, pos)) { // hex</span>
+<span class="fc" id="L762">            radix = 16;</span>
+<span class="fc" id="L763">            pos += 2;</span>
+<span class="fc bfc" id="L764" title="All 2 branches covered.">        } else if (str.startsWith(&quot;#&quot;, pos)) { // alternative hex (allowed by Long/Integer)</span>
+<span class="fc" id="L765">            radix = 16;</span>
+<span class="fc" id="L766">            pos ++;</span>
+<span class="fc bfc" id="L767" title="All 4 branches covered.">        } else if (str.startsWith(&quot;0&quot;, pos) &amp;&amp; str.length() &gt; pos + 1) { // octal; so long as there are additional digits</span>
+<span class="fc" id="L768">            radix = 8;</span>
+<span class="fc" id="L769">            pos ++;</span>
         } // default is to treat as decimal
 
-<span class="fc" id="L745">        final BigInteger value = new BigInteger(str.substring(pos), radix);</span>
-<span class="fc bfc" id="L746" title="All 2 branches covered.">        return negate ? value.negate() : value;</span>
+<span class="fc" id="L772">        final BigInteger value = new BigInteger(str.substring(pos), radix);</span>
+<span class="fc bfc" id="L773" title="All 2 branches covered.">        return negate ? value.negate() : value;</span>
     }
 
     /**
@@ -756,21 +783,21 @@ public class NumberUtils {
      * @throws NumberFormatException if the value cannot be converted
      */
     public static BigDecimal createBigDecimal(final String str) {
-<span class="fc bfc" id="L759" title="All 2 branches covered.">        if (str == null) {</span>
-<span class="fc" id="L760">            return null;</span>
+<span class="fc bfc" id="L786" title="All 2 branches covered.">        if (str == null) {</span>
+<span class="fc" id="L787">            return null;</span>
         }
         // handle JDK1.3.1 bug where &quot;&quot; throws IndexOutOfBoundsException
-<span class="fc bfc" id="L763" title="All 2 branches covered.">        if (StringUtils.isBlank(str)) {</span>
-<span class="fc" id="L764">            throw new NumberFormatException(&quot;A blank string is not a valid number&quot;);</span>
+<span class="fc bfc" id="L790" title="All 2 branches covered.">        if (StringUtils.isBlank(str)) {</span>
+<span class="fc" id="L791">            throw new NumberFormatException(&quot;A blank string is not a valid number&quot;);</span>
         }
-<span class="fc bfc" id="L766" title="All 2 branches covered.">        if (str.trim().startsWith(&quot;--&quot;)) {</span>
+<span class="fc bfc" id="L793" title="All 2 branches covered.">        if (str.trim().startsWith(&quot;--&quot;)) {</span>
             // this is protection for poorness in java.lang.BigDecimal.
             // it accepts this as a legal value, but it does not appear 
             // to be in specification of class. OS X Java parses it to 
             // a wrong value.
-<span class="fc" id="L771">            throw new NumberFormatException(str + &quot; is not a valid number.&quot;);</span>
+<span class="fc" id="L798">            throw new NumberFormatException(str + &quot; is not a valid number.&quot;);</span>
         }
-<span class="fc" id="L773">        return new BigDecimal(str);</span>
+<span class="fc" id="L800">        return new BigDecimal(str);</span>
     }
 
     // Min in array
@@ -785,17 +812,17 @@ public class NumberUtils {
      */
     public static long min(final long[] array) {
         // Validates input
-<span class="fc" id="L788">        validateArray(array);</span>
+<span class="fc" id="L815">        validateArray(array);</span>
     
         // Finds and returns min
-<span class="fc" id="L791">        long min = array[0];</span>
-<span class="fc bfc" id="L792" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
-<span class="fc bfc" id="L793" title="All 2 branches covered.">            if (array[i] &lt; min) {</span>
-<span class="fc" id="L794">                min = array[i];</span>
+<span class="fc" id="L818">        long min = array[0];</span>
+<span class="fc bfc" id="L819" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
+<span class="fc bfc" id="L820" title="All 2 branches covered.">            if (array[i] &lt; min) {</span>
+<span class="fc" id="L821">                min = array[i];</span>
             }
         }
     
-<span class="fc" id="L798">        return min;</span>
+<span class="fc" id="L825">        return min;</span>
     }
 
     /**
@@ -808,17 +835,17 @@ public class NumberUtils {
      */
     public static int min(final int[] array) {
         // Validates input
-<span class="fc" id="L811">        validateArray(array);</span>
+<span class="fc" id="L838">        validateArray(array);</span>
     
         // Finds and returns min
-<span class="fc" id="L814">        int min = array[0];</span>
-<span class="fc bfc" id="L815" title="All 2 branches covered.">        for (int j = 1; j &lt; array.length; j++) {</span>
-<span class="fc bfc" id="L816" title="All 2 branches covered.">            if (array[j] &lt; min) {</span>
-<span class="fc" id="L817">                min = array[j];</span>
+<span class="fc" id="L841">        int min = array[0];</span>
+<span class="fc bfc" id="L842" title="All 2 branches covered.">        for (int j = 1; j &lt; array.length; j++) {</span>
+<span class="fc bfc" id="L843" title="All 2 branches covered.">            if (array[j] &lt; min) {</span>
+<span class="fc" id="L844">                min = array[j];</span>
             }
         }
     
-<span class="fc" id="L821">        return min;</span>
+<span class="fc" id="L848">        return min;</span>
     }
 
     /**
@@ -831,17 +858,17 @@ public class NumberUtils {
      */
     public static short min(final short[] array) {
         // Validates input
-<span class="fc" id="L834">        validateArray(array);</span>
+<span class="fc" id="L861">        validateArray(array);</span>
     
         // Finds and returns min
-<span class="fc" id="L837">        short min = array[0];</span>
-<span class="fc bfc" id="L838" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
-<span class="fc bfc" id="L839" title="All 2 branches covered.">            if (array[i] &lt; min) {</span>
-<span class="fc" id="L840">                min = array[i];</span>
+<span class="fc" id="L864">        short min = array[0];</span>
+<span class="fc bfc" id="L865" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
+<span class="fc bfc" id="L866" title="All 2 branches covered.">            if (array[i] &lt; min) {</span>
+<span class="fc" id="L867">                min = array[i];</span>
             }
         }
     
-<span class="fc" id="L844">        return min;</span>
+<span class="fc" id="L871">        return min;</span>
     }
 
     /**
@@ -854,17 +881,17 @@ public class NumberUtils {
      */
     public static byte min(final byte[] array) {
         // Validates input
-<span class="fc" id="L857">        validateArray(array);</span>
+<span class="fc" id="L884">        validateArray(array);</span>
     
         // Finds and returns min
-<span class="fc" id="L860">        byte min = array[0];</span>
-<span class="fc bfc" id="L861" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
-<span class="fc bfc" id="L862" title="All 2 branches covered.">            if (array[i] &lt; min) {</span>
-<span class="fc" id="L863">                min = array[i];</span>
+<span class="fc" id="L887">        byte min = array[0];</span>
+<span class="fc bfc" id="L888" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
+<span class="fc bfc" id="L889" title="All 2 branches covered.">            if (array[i] &lt; min) {</span>
+<span class="fc" id="L890">                min = array[i];</span>
             }
         }
     
-<span class="fc" id="L867">        return min;</span>
+<span class="fc" id="L894">        return min;</span>
     }
 
      /**
@@ -878,20 +905,20 @@ public class NumberUtils {
      */
     public static double min(final double[] array) {
         // Validates input
-<span class="fc" id="L881">        validateArray(array);</span>
+<span class="fc" id="L908">        validateArray(array);</span>
     
         // Finds and returns min
-<span class="fc" id="L884">        double min = array[0];</span>
-<span class="fc bfc" id="L885" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
-<span class="fc bfc" id="L886" title="All 2 branches covered.">            if (Double.isNaN(array[i])) {</span>
-<span class="fc" id="L887">                return Double.NaN;</span>
+<span class="fc" id="L911">        double min = array[0];</span>
+<span class="fc bfc" id="L912" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
+<span class="fc bfc" id="L913" title="All 2 branches covered.">            if (Double.isNaN(array[i])) {</span>
+<span class="fc" id="L914">                return Double.NaN;</span>
             }
-<span class="fc bfc" id="L889" title="All 2 branches covered.">            if (array[i] &lt; min) {</span>
-<span class="fc" id="L890">                min = array[i];</span>
+<span class="fc bfc" id="L916" title="All 2 branches covered.">            if (array[i] &lt; min) {</span>
+<span class="fc" id="L917">                min = array[i];</span>
             }
         }
     
-<span class="fc" id="L894">        return min;</span>
+<span class="fc" id="L921">        return min;</span>
     }
 
     /**
@@ -905,20 +932,20 @@ public class NumberUtils {
      */
     public static float min(final float[] array) {
         // Validates input
-<span class="fc" id="L908">        validateArray(array);</span>
+<span class="fc" id="L935">        validateArray(array);</span>
     
         // Finds and returns min
-<span class="fc" id="L911">        float min = array[0];</span>
-<span class="fc bfc" id="L912" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
-<span class="pc bpc" id="L913" title="1 of 2 branches missed.">            if (Float.isNaN(array[i])) {</span>
-<span class="nc" id="L914">                return Float.NaN;</span>
+<span class="fc" id="L938">        float min = array[0];</span>
+<span class="fc bfc" id="L939" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
+<span class="pc bpc" id="L940" title="1 of 2 branches missed.">            if (Float.isNaN(array[i])) {</span>
+<span class="nc" id="L941">                return Float.NaN;</span>
             }
-<span class="fc bfc" id="L916" title="All 2 branches covered.">            if (array[i] &lt; min) {</span>
-<span class="fc" id="L917">                min = array[i];</span>
+<span class="fc bfc" id="L943" title="All 2 branches covered.">            if (array[i] &lt; min) {</span>
+<span class="fc" id="L944">                min = array[i];</span>
             }
         }
     
-<span class="fc" id="L921">        return min;</span>
+<span class="fc" id="L948">        return min;</span>
     }
 
     // Max in array
@@ -933,17 +960,17 @@ public class NumberUtils {
      */
     public static long max(final long[] array) {
         // Validates input
-<span class="fc" id="L936">        validateArray(array);</span>
+<span class="fc" id="L963">        validateArray(array);</span>
 
         // Finds and returns max
-<span class="fc" id="L939">        long max = array[0];</span>
-<span class="fc bfc" id="L940" title="All 2 branches covered.">        for (int j = 1; j &lt; array.length; j++) {</span>
-<span class="fc bfc" id="L941" title="All 2 branches covered.">            if (array[j] &gt; max) {</span>
-<span class="fc" id="L942">                max = array[j];</span>
+<span class="fc" id="L966">        long max = array[0];</span>
+<span class="fc bfc" id="L967" title="All 2 branches covered.">        for (int j = 1; j &lt; array.length; j++) {</span>
+<span class="fc bfc" id="L968" title="All 2 branches covered.">            if (array[j] &gt; max) {</span>
+<span class="fc" id="L969">                max = array[j];</span>
             }
         }
 
-<span class="fc" id="L946">        return max;</span>
+<span class="fc" id="L973">        return max;</span>
     }
 
     /**
@@ -956,17 +983,17 @@ public class NumberUtils {
      */
     public static int max(final int[] array) {
         // Validates input
-<span class="fc" id="L959">        validateArray(array);</span>
+<span class="fc" id="L986">        validateArray(array);</span>
     
         // Finds and returns max
-<span class="fc" id="L962">        int max = array[0];</span>
-<span class="fc bfc" id="L963" title="All 2 branches covered.">        for (int j = 1; j &lt; array.length; j++) {</span>
-<span class="fc bfc" id="L964" title="All 2 branches covered.">            if (array[j] &gt; max) {</span>
-<span class="fc" id="L965">                max = array[j];</span>
+<span class="fc" id="L989">        int max = array[0];</span>
+<span class="fc bfc" id="L990" title="All 2 branches covered.">        for (int j = 1; j &lt; array.length; j++) {</span>
+<span class="fc bfc" id="L991" title="All 2 branches covered.">            if (array[j] &gt; max) {</span>
+<span class="fc" id="L992">                max = array[j];</span>
             }
         }
     
-<span class="fc" id="L969">        return max;</span>
+<span class="fc" id="L996">        return max;</span>
     }
 
     /**
@@ -979,17 +1006,17 @@ public class NumberUtils {
      */
     public static short max(final short[] array) {
         // Validates input
-<span class="fc" id="L982">        validateArray(array);</span>
+<span class="fc" id="L1009">        validateArray(array);</span>
     
         // Finds and returns max
-<span class="fc" id="L985">        short max = array[0];</span>
-<span class="fc bfc" id="L986" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
-<span class="fc bfc" id="L987" title="All 2 branches covered.">            if (array[i] &gt; max) {</span>
-<span class="fc" id="L988">                max = array[i];</span>
+<span class="fc" id="L1012">        short max = array[0];</span>
+<span class="fc bfc" id="L1013" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
+<span class="fc bfc" id="L1014" title="All 2 branches covered.">            if (array[i] &gt; max) {</span>
+<span class="fc" id="L1015">                max = array[i];</span>
             }
         }
     
-<span class="fc" id="L992">        return max;</span>
+<span class="fc" id="L1019">        return max;</span>
     }
 
     /**
@@ -1002,40 +1029,13 @@ public class NumberUtils {
      */
     public static byte max(final byte[] array) {
         // Validates input
-<span class="fc" id="L1005">        validateArray(array);</span>
+<span class="fc" id="L1032">        validateArray(array);</span>
     
         // Finds and returns max
-<span class="fc" id="L1008">        byte max = array[0];</span>
-<span class="fc bfc" id="L1009" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
-<span class="fc bfc" id="L1010" title="All 2 branches covered.">            if (array[i] &gt; max) {</span>
-<span class="fc" id="L1011">                max = array[i];</span>
-            }
-        }
-    
-<span class="fc" id="L1015">        return max;</span>
-    }
-
-    /**
-     * &lt;p&gt;Returns the maximum value in an array.&lt;/p&gt;
-     * 
-     * @param array  an array, must not be null or empty
-     * @return the minimum value in the array
-     * @throws IllegalArgumentException if &lt;code&gt;array&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;
-     * @throws IllegalArgumentException if &lt;code&gt;array&lt;/code&gt; is empty
-     * @see IEEE754rUtils#max(double[]) IEEE754rUtils for a version of this method that handles NaN differently
-     */
-    public static double max(final double[] array) {
-        // Validates input
-<span class="fc" id="L1029">        validateArray(array);</span>
-
-        // Finds and returns max
-<span class="fc" id="L1032">        double max = array[0];</span>
-<span class="fc bfc" id="L1033" title="All 2 branches covered.">        for (int j = 1; j &lt; array.length; j++) {</span>
-<span class="fc bfc" id="L1034" title="All 2 branches covered.">            if (Double.isNaN(array[j])) {</span>
-<span class="fc" id="L1035">                return Double.NaN;</span>
-            }
-<span class="fc bfc" id="L1037" title="All 2 branches covered.">            if (array[j] &gt; max) {</span>
-<span class="fc" id="L1038">                max = array[j];</span>
+<span class="fc" id="L1035">        byte max = array[0];</span>
+<span class="fc bfc" id="L1036" title="All 2 branches covered.">        for (int i = 1; i &lt; array.length; i++) {</span>
+<span class="fc bfc" id="L1037" title="All 2 branches covered.">            if (array[i] &gt; max) {</span>
+<span class="fc" id="L1038">                max = array[i];</span>
             }
         }
     
@@ -1049,24 +1049,51 @@ public class NumberUtils {
      * @return the minimum value in the array
      * @throws IllegalArgumentException if &lt;code&gt;array&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;
      * @throws IllegalArgumentException if &lt;code&gt;array&lt;/code&gt; is empty
-     * @see IEEE754rUtils#max(float[]) IEEE754rUtils for a version of this method that handles NaN differently
+     * @see IEEE754rUtils#max(double[]) IEEE754rUtils for a version of this method that handles NaN differently
      */
-    public static float max(final float[] array) {
+    public static double max(final double[] array) {
         // Validates input
 <span class="fc" id="L1056">        validateArray(array);</span>
 
         // Finds and returns max
-<span class="fc" id="L1059">        float max = array[0];</span>
+<span class="fc" id="L1059">        double max = array[0];</span>
 <span class="fc bfc" id="L1060" title="All 2 branches covered.">        for (int j = 1; j &lt; array.length; j++) {</span>
-<span class="fc bfc" id="L1061" title="All 2 branches covered.">            if (Float.isNaN(array[j])) {</span>
-<span class="fc" id="L1062">                return Float.NaN;</span>
+<span class="fc bfc" id="L1061" title="All 2 branches covered.">            if (Double.isNaN(array[j])) {</span>
+<span class="fc" id="L1062">                return Double.NaN;</span>
             }
 <span class="fc bfc" id="L1064" title="All 2 branches covered.">            if (array[j] &gt; max) {</span>
 <span class="fc" id="L1065">                max = array[j];</span>
             }
         }
-
+    
 <span class="fc" id="L1069">        return max;</span>
+    }
+
+    /**
+     * &lt;p&gt;Returns the maximum value in an array.&lt;/p&gt;
+     * 
+     * @param array  an array, must not be null or empty
+     * @return the minimum value in the array
+     * @throws IllegalArgumentException if &lt;code&gt;array&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;
+     * @throws IllegalArgumentException if &lt;code&gt;array&lt;/code&gt; is empty
+     * @see IEEE754rUtils#max(float[]) IEEE754rUtils for a version of this method that handles NaN differently
+     */
+    public static float max(final float[] array) {
+        // Validates input
+<span class="fc" id="L1083">        validateArray(array);</span>
+
+        // Finds and returns max
+<span class="fc" id="L1086">        float max = array[0];</span>
+<span class="fc bfc" id="L1087" title="All 2 branches covered.">        for (int j = 1; j &lt; array.length; j++) {</span>
+<span class="fc bfc" id="L1088" title="All 2 branches covered.">            if (Float.isNaN(array[j])) {</span>
+<span class="fc" id="L1089">                return Float.NaN;</span>
+            }
+<span class="fc bfc" id="L1091" title="All 2 branches covered.">            if (array[j] &gt; max) {</span>
+<span class="fc" id="L1092">                max = array[j];</span>
+            }
+        }
+
+<span class="fc" id="L1096">        return max;</span>
     }
 
     /**
@@ -1076,12 +1103,12 @@ public class NumberUtils {
      * @throws IllegalArgumentException if {@code array} is either {@code null} or empty
      */
     private static void validateArray(final Object array) {
-<span class="fc bfc" id="L1079" title="All 2 branches covered.">        if (array == null) {</span>
-<span class="fc" id="L1080">            throw new IllegalArgumentException(&quot;The Array must not be null&quot;);</span>
-<span class="fc bfc" id="L1081" title="All 2 branches covered.">        } else if (Array.getLength(array) == 0) {</span>
-<span class="fc" id="L1082">            throw new IllegalArgumentException(&quot;Array cannot be empty.&quot;);</span>
+<span class="fc bfc" id="L1106" title="All 2 branches covered.">        if (array == null) {</span>
+<span class="fc" id="L1107">            throw new IllegalArgumentException(&quot;The Array must not be null&quot;);</span>
+<span class="fc bfc" id="L1108" title="All 2 branches covered.">        } else if (Array.getLength(array) == 0) {</span>
+<span class="fc" id="L1109">            throw new IllegalArgumentException(&quot;Array cannot be empty.&quot;);</span>
         }
-<span class="fc" id="L1084">    }</span>
+<span class="fc" id="L1111">    }</span>
      
     // 3 param min
     //-----------------------------------------------------------------------
@@ -1094,13 +1121,13 @@ public class NumberUtils {
      * @return  the smallest of the values
      */
     public static long min(long a, final long b, final long c) {
-<span class="fc bfc" id="L1097" title="All 2 branches covered.">        if (b &lt; a) {</span>
-<span class="fc" id="L1098">            a = b;</span>
+<span class="fc bfc" id="L1124" title="All 2 branches covered.">        if (b &lt; a) {</span>
+<span class="fc" id="L1125">            a = b;</span>
         }
-<span class="fc bfc" id="L1100" title="All 2 branches covered.">        if (c &lt; a) {</span>
-<span class="fc" id="L1101">            a = c;</span>
+<span class="fc bfc" id="L1127" title="All 2 branches covered.">        if (c &lt; a) {</span>
+<span class="fc" id="L1128">            a = c;</span>
         }
-<span class="fc" id="L1103">        return a;</span>
+<span class="fc" id="L1130">        return a;</span>
     }
 
     /**
@@ -1112,13 +1139,13 @@ public class NumberUtils {
      * @return  the smallest of the values
      */
     public static int min(int a, final int b, final int c) {
-<span class="fc bfc" id="L1115" title="All 2 branches covered.">        if (b &lt; a) {</span>
-<span class="fc" id="L1116">            a = b;</span>
+<span class="fc bfc" id="L1142" title="All 2 branches covered.">        if (b &lt; a) {</span>
+<span class="fc" id="L1143">            a = b;</span>
         }
-<span class="fc bfc" id="L1118" title="All 2 branches covered.">        if (c &lt; a) {</span>
-<span class="fc" id="L1119">            a = c;</span>
+<span class="fc bfc" id="L1145" title="All 2 branches covered.">        if (c &lt; a) {</span>
+<span class="fc" id="L1146">            a = c;</span>
         }
-<span class="fc" id="L1121">        return a;</span>
+<span class="fc" id="L1148">        return a;</span>
     }
 
     /**
@@ -1130,13 +1157,13 @@ public class NumberUtils {
      * @return  the smallest of the values
      */
     public static short min(short a, final short b, final short c) {
-<span class="fc bfc" id="L1133" title="All 2 branches covered.">        if (b &lt; a) {</span>
-<span class="fc" id="L1134">            a = b;</span>
+<span class="fc bfc" id="L1160" title="All 2 branches covered.">        if (b &lt; a) {</span>
+<span class="fc" id="L1161">            a = b;</span>
         }
-<span class="fc bfc" id="L1136" title="All 2 branches covered.">        if (c &lt; a) {</span>
-<span class="fc" id="L1137">            a = c;</span>
+<span class="fc bfc" id="L1163" title="All 2 branches covered.">        if (c &lt; a) {</span>
+<span class="fc" id="L1164">            a = c;</span>
         }
-<span class="fc" id="L1139">        return a;</span>
+<span class="fc" id="L1166">        return a;</span>
     }
 
     /**
@@ -1148,13 +1175,13 @@ public class NumberUtils {
      * @return  the smallest of the values
      */
     public static byte min(byte a, final byte b, final byte c) {
-<span class="fc bfc" id="L1151" title="All 2 branches covered.">        if (b &lt; a) {</span>
-<span class="fc" id="L1152">            a = b;</span>
+<span class="fc bfc" id="L1178" title="All 2 branches covered.">        if (b &lt; a) {</span>
+<span class="fc" id="L1179">            a = b;</span>
         }
-<span class="fc bfc" id="L1154" title="All 2 branches covered.">        if (c &lt; a) {</span>
-<span class="fc" id="L1155">            a = c;</span>
+<span class="fc bfc" id="L1181" title="All 2 branches covered.">        if (c &lt; a) {</span>
+<span class="fc" id="L1182">            a = c;</span>
         }
-<span class="fc" id="L1157">        return a;</span>
+<span class="fc" id="L1184">        return a;</span>
     }
 
     /**
@@ -1170,7 +1197,7 @@ public class NumberUtils {
      * @see IEEE754rUtils#min(double, double, double) for a version of this method that handles NaN differently
      */
     public static double min(final double a, final double b, final double c) {
-<span class="fc" id="L1173">        return Math.min(Math.min(a, b), c);</span>
+<span class="fc" id="L1200">        return Math.min(Math.min(a, b), c);</span>
     }
 
     /**
@@ -1186,7 +1213,7 @@ public class NumberUtils {
      * @see IEEE754rUtils#min(float, float, float) for a version of this method that handles NaN differently
      */
     public static float min(final float a, final float b, final float c) {
-<span class="fc" id="L1189">        return Math.min(Math.min(a, b), c);</span>
+<span class="fc" id="L1216">        return Math.min(Math.min(a, b), c);</span>
     }
 
     // 3 param max
@@ -1200,13 +1227,13 @@ public class NumberUtils {
      * @return  the largest of the values
      */
     public static long max(long a, final long b, final long c) {
-<span class="fc bfc" id="L1203" title="All 2 branches covered.">        if (b &gt; a) {</span>
-<span class="fc" id="L1204">            a = b;</span>
+<span class="fc bfc" id="L1230" title="All 2 branches covered.">        if (b &gt; a) {</span>
+<span class="fc" id="L1231">            a = b;</span>
         }
-<span class="fc bfc" id="L1206" title="All 2 branches covered.">        if (c &gt; a) {</span>
-<span class="fc" id="L1207">            a = c;</span>
+<span class="fc bfc" id="L1233" title="All 2 branches covered.">        if (c &gt; a) {</span>
+<span class="fc" id="L1234">            a = c;</span>
         }
-<span class="fc" id="L1209">        return a;</span>
+<span class="fc" id="L1236">        return a;</span>
     }
 
     /**
@@ -1218,13 +1245,13 @@ public class NumberUtils {
      * @return  the largest of the values
      */
     public static int max(int a, final int b, final int c) {
-<span class="fc bfc" id="L1221" title="All 2 branches covered.">        if (b &gt; a) {</span>
-<span class="fc" id="L1222">            a = b;</span>
+<span class="fc bfc" id="L1248" title="All 2 branches covered.">        if (b &gt; a) {</span>
+<span class="fc" id="L1249">            a = b;</span>
         }
-<span class="fc bfc" id="L1224" title="All 2 branches covered.">        if (c &gt; a) {</span>
-<span class="fc" id="L1225">            a = c;</span>
+<span class="fc bfc" id="L1251" title="All 2 branches covered.">        if (c &gt; a) {</span>
+<span class="fc" id="L1252">            a = c;</span>
         }
-<span class="fc" id="L1227">        return a;</span>
+<span class="fc" id="L1254">        return a;</span>
     }
 
     /**
@@ -1236,13 +1263,13 @@ public class NumberUtils {
      * @return  the largest of the values
      */
     public static short max(short a, final short b, final short c) {
-<span class="fc bfc" id="L1239" title="All 2 branches covered.">        if (b &gt; a) {</span>
-<span class="fc" id="L1240">            a = b;</span>
+<span class="fc bfc" id="L1266" title="All 2 branches covered.">        if (b &gt; a) {</span>
+<span class="fc" id="L1267">            a = b;</span>
         }
-<span class="fc bfc" id="L1242" title="All 2 branches covered.">        if (c &gt; a) {</span>
-<span class="fc" id="L1243">            a = c;</span>
+<span class="fc bfc" id="L1269" title="All 2 branches covered.">        if (c &gt; a) {</span>
+<span class="fc" id="L1270">            a = c;</span>
         }
-<span class="fc" id="L1245">        return a;</span>
+<span class="fc" id="L1272">        return a;</span>
     }
 
     /**
@@ -1254,13 +1281,13 @@ public class NumberUtils {
      * @return  the largest of the values
      */
     public static byte max(byte a, final byte b, final byte c) {
-<span class="fc bfc" id="L1257" title="All 2 branches covered.">        if (b &gt; a) {</span>
-<span class="fc" id="L1258">            a = b;</span>
+<span class="fc bfc" id="L1284" title="All 2 branches covered.">        if (b &gt; a) {</span>
+<span class="fc" id="L1285">            a = b;</span>
         }
-<span class="fc bfc" id="L1260" title="All 2 branches covered.">        if (c &gt; a) {</span>
-<span class="fc" id="L1261">            a = c;</span>
+<span class="fc bfc" id="L1287" title="All 2 branches covered.">        if (c &gt; a) {</span>
+<span class="fc" id="L1288">            a = c;</span>
         }
-<span class="fc" id="L1263">        return a;</span>
+<span class="fc" id="L1290">        return a;</span>
     }
 
     /**
@@ -1276,7 +1303,7 @@ public class NumberUtils {
      * @see IEEE754rUtils#max(double, double, double) for a version of this method that handles NaN differently
      */
     public static double max(final double a, final double b, final double c) {
-<span class="fc" id="L1279">        return Math.max(Math.max(a, b), c);</span>
+<span class="fc" id="L1306">        return Math.max(Math.max(a, b), c);</span>
     }
 
     /**
@@ -1292,7 +1319,7 @@ public class NumberUtils {
      * @see IEEE754rUtils#max(float, float, float) for a version of this method that handles NaN differently
      */
     public static float max(final float a, final float b, final float c) {
-<span class="fc" id="L1295">        return Math.max(Math.max(a, b), c);</span>
+<span class="fc" id="L1322">        return Math.max(Math.max(a, b), c);</span>
     }
 
     //-----------------------------------------------------------------------
@@ -1307,15 +1334,15 @@ public class NumberUtils {
      * @return &lt;code&gt;true&lt;/code&gt; if str contains only Unicode numeric
      */
     public static boolean isDigits(final String str) {
-<span class="fc bfc" id="L1310" title="All 2 branches covered.">        if (StringUtils.isEmpty(str)) {</span>
-<span class="fc" id="L1311">            return false;</span>
+<span class="fc bfc" id="L1337" title="All 2 branches covered.">        if (StringUtils.isEmpty(str)) {</span>
+<span class="fc" id="L1338">            return false;</span>
         }
-<span class="fc bfc" id="L1313" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
-<span class="fc bfc" id="L1314" title="All 2 branches covered.">            if (!Character.isDigit(str.charAt(i))) {</span>
-<span class="fc" id="L1315">                return false;</span>
+<span class="fc bfc" id="L1340" title="All 2 branches covered.">        for (int i = 0; i &lt; str.length(); i++) {</span>
+<span class="fc bfc" id="L1341" title="All 2 branches covered.">            if (!Character.isDigit(str.charAt(i))) {</span>
+<span class="fc" id="L1342">                return false;</span>
             }
         }
-<span class="fc" id="L1318">        return true;</span>
+<span class="fc" id="L1345">        return true;</span>
     }
 
     /**
@@ -1332,105 +1359,105 @@ public class NumberUtils {
      * @return &lt;code&gt;true&lt;/code&gt; if the string is a correctly formatted number
      */
     public static boolean isNumber(final String str) {
-<span class="fc bfc" id="L1335" title="All 2 branches covered.">        if (StringUtils.isEmpty(str)) {</span>
-<span class="fc" id="L1336">            return false;</span>
+<span class="fc bfc" id="L1362" title="All 2 branches covered.">        if (StringUtils.isEmpty(str)) {</span>
+<span class="fc" id="L1363">            return false;</span>
         }
-<span class="fc" id="L1338">        final char[] chars = str.toCharArray();</span>
-<span class="fc" id="L1339">        int sz = chars.length;</span>
-<span class="fc" id="L1340">        boolean hasExp = false;</span>
-<span class="fc" id="L1341">        boolean hasDecPoint = false;</span>
-<span class="fc" id="L1342">        boolean allowSigns = false;</span>
-<span class="fc" id="L1343">        boolean foundDigit = false;</span>
+<span class="fc" id="L1365">        final char[] chars = str.toCharArray();</span>
+<span class="fc" id="L1366">        int sz = chars.length;</span>
+<span class="fc" id="L1367">        boolean hasExp = false;</span>
+<span class="fc" id="L1368">        boolean hasDecPoint = false;</span>
+<span class="fc" id="L1369">        boolean allowSigns = false;</span>
+<span class="fc" id="L1370">        boolean foundDigit = false;</span>
         // deal with any possible sign up front
-<span class="fc bfc" id="L1345" title="All 2 branches covered.">        final int start = (chars[0] == '-') ? 1 : 0;</span>
-<span class="fc bfc" id="L1346" title="All 6 branches covered.">        if (sz &gt; start + 1 &amp;&amp; chars[start] == '0' &amp;&amp; chars[start + 1] == 'x') {</span>
-<span class="fc" id="L1347">            int i = start + 2;</span>
-<span class="pc bpc" id="L1348" title="1 of 2 branches missed.">            if (i == sz) {</span>
-<span class="nc" id="L1349">                return false; // str == &quot;0x&quot;</span>
+<span class="fc bfc" id="L1372" title="All 2 branches covered.">        final int start = (chars[0] == '-') ? 1 : 0;</span>
+<span class="fc bfc" id="L1373" title="All 6 branches covered.">        if (sz &gt; start + 1 &amp;&amp; chars[start] == '0' &amp;&amp; chars[start + 1] == 'x') {</span>
+<span class="fc" id="L1374">            int i = start + 2;</span>
+<span class="pc bpc" id="L1375" title="1 of 2 branches missed.">            if (i == sz) {</span>
+<span class="nc" id="L1376">                return false; // str == &quot;0x&quot;</span>
             }
             // checking hex (it can't be anything else)
-<span class="fc bfc" id="L1352" title="All 2 branches covered.">            for (; i &lt; chars.length; i++) {</span>
-<span class="pc bpc" id="L1353" title="3 of 12 branches missed.">                if ((chars[i] &lt; '0' || chars[i] &gt; '9')</span>
+<span class="fc bfc" id="L1379" title="All 2 branches covered.">            for (; i &lt; chars.length; i++) {</span>
+<span class="pc bpc" id="L1380" title="3 of 12 branches missed.">                if ((chars[i] &lt; '0' || chars[i] &gt; '9')</span>
                     &amp;&amp; (chars[i] &lt; 'a' || chars[i] &gt; 'f')
                     &amp;&amp; (chars[i] &lt; 'A' || chars[i] &gt; 'F')) {
-<span class="fc" id="L1356">                    return false;</span>
+<span class="fc" id="L1383">                    return false;</span>
                 }
             }
-<span class="fc" id="L1359">            return true;</span>
+<span class="fc" id="L1386">            return true;</span>
         }
-<span class="fc" id="L1361">        sz--; // don't want to loop to the last char, check it afterwords</span>
+<span class="fc" id="L1388">        sz--; // don't want to loop to the last char, check it afterwords</span>
               // for type qualifiers
-<span class="fc" id="L1363">        int i = start;</span>
+<span class="fc" id="L1390">        int i = start;</span>
         // loop to the next to last char or to the last char if we need another digit to
         // make a valid number (e.g. chars[0..5] = &quot;1234E&quot;)
-<span class="pc bpc" id="L1366" title="2 of 8 branches missed.">        while (i &lt; sz || (i &lt; sz + 1 &amp;&amp; allowSigns &amp;&amp; !foundDigit)) {</span>
-<span class="fc bfc" id="L1367" title="All 4 branches covered.">            if (chars[i] &gt;= '0' &amp;&amp; chars[i] &lt;= '9') {</span>
-<span class="fc" id="L1368">                foundDigit = true;</span>
-<span class="fc" id="L1369">                allowSigns = false;</span>
+<span class="pc bpc" id="L1393" title="2 of 8 branches missed.">        while (i &lt; sz || (i &lt; sz + 1 &amp;&amp; allowSigns &amp;&amp; !foundDigit)) {</span>
+<span class="fc bfc" id="L1394" title="All 4 branches covered.">            if (chars[i] &gt;= '0' &amp;&amp; chars[i] &lt;= '9') {</span>
+<span class="fc" id="L1395">                foundDigit = true;</span>
+<span class="fc" id="L1396">                allowSigns = false;</span>
 
-<span class="fc bfc" id="L1371" title="All 2 branches covered.">            } else if (chars[i] == '.') {</span>
-<span class="fc bfc" id="L1372" title="All 4 branches covered.">                if (hasDecPoint || hasExp) {</span>
+<span class="fc bfc" id="L1398" title="All 2 branches covered.">            } else if (chars[i] == '.') {</span>
+<span class="fc bfc" id="L1399" title="All 4 branches covered.">                if (hasDecPoint || hasExp) {</span>
                     // two decimal points or dec in exponent   
-<span class="fc" id="L1374">                    return false;</span>
+<span class="fc" id="L1401">                    return false;</span>
                 }
-<span class="fc" id="L1376">                hasDecPoint = true;</span>
-<span class="pc bpc" id="L1377" title="1 of 4 branches missed.">            } else if (chars[i] == 'e' || chars[i] == 'E') {</span>
+<span class="fc" id="L1403">                hasDecPoint = true;</span>
+<span class="pc bpc" id="L1404" title="1 of 4 branches missed.">            } else if (chars[i] == 'e' || chars[i] == 'E') {</span>
                 // we've already taken care of hex.
-<span class="pc bpc" id="L1379" title="1 of 2 branches missed.">                if (hasExp) {</span>
+<span class="pc bpc" id="L1406" title="1 of 2 branches missed.">                if (hasExp) {</span>
                     // two E's
-<span class="nc" id="L1381">                    return false;</span>
+<span class="nc" id="L1408">                    return false;</span>
                 }
-<span class="pc bpc" id="L1383" title="1 of 2 branches missed.">                if (!foundDigit) {</span>
-<span class="nc" id="L1384">                    return false;</span>
-                }
-<span class="fc" id="L1386">                hasExp = true;</span>
-<span class="fc" id="L1387">                allowSigns = true;</span>
-<span class="fc bfc" id="L1388" title="All 4 branches covered.">            } else if (chars[i] == '+' || chars[i] == '-') {</span>
-<span class="fc bfc" id="L1389" title="All 2 branches covered.">                if (!allowSigns) {</span>
-<span class="fc" id="L1390">                    return false;</span>
-                }
-<span class="fc" id="L1392">                allowSigns = false;</span>
-<span class="fc" id="L1393">                foundDigit = false; // we need a digit after the E</span>
-            } else {
-<span class="fc" id="L1395">                return false;</span>
-            }
-<span class="fc" id="L1397">            i++;</span>
-        }
-<span class="pc bpc" id="L1399" title="1 of 2 branches missed.">        if (i &lt; chars.length) {</span>
-<span class="fc bfc" id="L1400" title="All 4 branches covered.">            if (chars[i] &gt;= '0' &amp;&amp; chars[i] &lt;= '9') {</span>
-                // no type qualifier, OK
-<span class="fc" id="L1402">                return true;</span>
-            }
-<span class="pc bpc" id="L1404" title="1 of 4 branches missed.">            if (chars[i] == 'e' || chars[i] == 'E') {</span>
-                // can't have an E at the last byte
-<span class="fc" id="L1406">                return false;</span>
-            }
-<span class="fc bfc" id="L1408" title="All 2 branches covered.">            if (chars[i] == '.') {</span>
-<span class="pc bpc" id="L1409" title="2 of 4 branches missed.">                if (hasDecPoint || hasExp) {</span>
-                    // two decimal points or dec in exponent
+<span class="pc bpc" id="L1410" title="1 of 2 branches missed.">                if (!foundDigit) {</span>
 <span class="nc" id="L1411">                    return false;</span>
                 }
-                // single trailing decimal point after non-exponent is ok
-<span class="fc" id="L1414">                return foundDigit;</span>
+<span class="fc" id="L1413">                hasExp = true;</span>
+<span class="fc" id="L1414">                allowSigns = true;</span>
+<span class="fc bfc" id="L1415" title="All 4 branches covered.">            } else if (chars[i] == '+' || chars[i] == '-') {</span>
+<span class="fc bfc" id="L1416" title="All 2 branches covered.">                if (!allowSigns) {</span>
+<span class="fc" id="L1417">                    return false;</span>
+                }
+<span class="fc" id="L1419">                allowSigns = false;</span>
+<span class="fc" id="L1420">                foundDigit = false; // we need a digit after the E</span>
+            } else {
+<span class="fc" id="L1422">                return false;</span>
             }
-<span class="pc bpc" id="L1416" title="2 of 10 branches missed.">            if (!allowSigns</span>
+<span class="fc" id="L1424">            i++;</span>
+        }
+<span class="pc bpc" id="L1426" title="1 of 2 branches missed.">        if (i &lt; chars.length) {</span>
+<span class="fc bfc" id="L1427" title="All 4 branches covered.">            if (chars[i] &gt;= '0' &amp;&amp; chars[i] &lt;= '9') {</span>
+                // no type qualifier, OK
+<span class="fc" id="L1429">                return true;</span>
+            }
+<span class="pc bpc" id="L1431" title="1 of 4 branches missed.">            if (chars[i] == 'e' || chars[i] == 'E') {</span>
+                // can't have an E at the last byte
+<span class="fc" id="L1433">                return false;</span>
+            }
+<span class="fc bfc" id="L1435" title="All 2 branches covered.">            if (chars[i] == '.') {</span>
+<span class="pc bpc" id="L1436" title="2 of 4 branches missed.">                if (hasDecPoint || hasExp) {</span>
+                    // two decimal points or dec in exponent
+<span class="nc" id="L1438">                    return false;</span>
+                }
+                // single trailing decimal point after non-exponent is ok
+<span class="fc" id="L1441">                return foundDigit;</span>
+            }
+<span class="pc bpc" id="L1443" title="2 of 10 branches missed.">            if (!allowSigns</span>
                 &amp;&amp; (chars[i] == 'd'
                     || chars[i] == 'D'
                     || chars[i] == 'f'
                     || chars[i] == 'F')) {
-<span class="fc" id="L1421">                return foundDigit;</span>
+<span class="fc" id="L1448">                return foundDigit;</span>
             }
-<span class="fc bfc" id="L1423" title="All 4 branches covered.">            if (chars[i] == 'l'</span>
+<span class="fc bfc" id="L1450" title="All 4 branches covered.">            if (chars[i] == 'l'</span>
                 || chars[i] == 'L') {
                 // not allowing L with an exponent or decimal point
-<span class="pc bpc" id="L1426" title="1 of 6 branches missed.">                return foundDigit &amp;&amp; !hasExp &amp;&amp; !hasDecPoint;</span>
+<span class="pc bpc" id="L1453" title="1 of 6 branches missed.">                return foundDigit &amp;&amp; !hasExp &amp;&amp; !hasDecPoint;</span>
             }
             // last character is illegal
-<span class="fc" id="L1429">            return false;</span>
+<span class="fc" id="L1456">            return false;</span>
         }
         // allowSigns is true iff the val ends in 'E'
         // found digit it to make sure weird stuff like '.' and '1E-' doesn't pass
-<span class="nc bnc" id="L1433" title="All 4 branches missed.">        return !allowSigns &amp;&amp; foundDigit;</span>
+<span class="nc bnc" id="L1460" title="All 4 branches missed.">        return !allowSigns &amp;&amp; foundDigit;</span>
     }
 
 }

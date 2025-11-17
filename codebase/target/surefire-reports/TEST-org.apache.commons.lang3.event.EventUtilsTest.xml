@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="8" failures="0" name="org.apache.commons.lang3.event.EventUtilsTest" time="0.015" errors="0" skipped="0">
+<testsuite tests="8" failures="0" name="org.apache.commons.lang3.event.EventUtilsTest" time="0" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -65,12 +65,12 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testAddEventListenerWithNoAddMethod" time="0.006"/>
-  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testAddEventListener" time="0.001"/>
-  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testBindEventsToMethod" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testAddEventListenerWithNoAddMethod" time="0"/>
+  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testAddEventListener" time="0"/>
+  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testBindEventsToMethod" time="0"/>
   <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testAddEventListenerWithPrivateAddMethod" time="0"/>
-  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testBindFilteredEventsToMethod" time="0.004"/>
-  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testAddEventListenerThrowsException" time="0.002"/>
-  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testBindEventsToMethodWithEvent" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testBindFilteredEventsToMethod" time="0"/>
+  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testAddEventListenerThrowsException" time="0"/>
+  <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testBindEventsToMethodWithEvent" time="0"/>
   <testcase classname="org.apache.commons.lang3.event.EventUtilsTest" name="testConstructor" time="0"/>
 </testsuite>

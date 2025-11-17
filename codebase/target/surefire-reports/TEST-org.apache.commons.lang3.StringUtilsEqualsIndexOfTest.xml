@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="49" failures="0" name="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" time="0.006" errors="0" skipped="0">
+<testsuite tests="49" failures="0" name="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" time="0.002" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -94,14 +94,14 @@
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testContainsIgnoreCase_LocaleIndependence" time="0.002"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testContainsAny_StringString" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testIndexOfAnyBut_StringCharArrayWithSupplementaryChars" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testLastIndexOf_charInt" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testLastIndexOf_charInt" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testContainsNone_StringWithBadSupplementaryChars" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testIndexOfAnyBut_StringCharArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testContainsAny_StringWithSupplementaryChars" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testIndexOf_StringInt" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testLastIndexOf_StringInt" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testIndexOfAny_StringStringArray" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testEquals" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testEquals" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testLastIndexOf_char" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testContainsOnly_CharArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testContainsWhitespace" time="0"/>
@@ -109,7 +109,7 @@
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testLastIndexOfAny_StringStringArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testContainsAny_StringCharArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testLastIndexOfIgnoreCase_String" time="0"/>
-  <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testCustomCharSequence" time="0.002"/>
+  <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testCustomCharSequence" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testIndexOf_String" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testContainsNone_CharArrayWithBadSupplementaryChars" time="0"/>
   <testcase classname="org.apache.commons.lang3.StringUtilsEqualsIndexOfTest" name="testIndexOfAny_StringCharArray" time="0"/>

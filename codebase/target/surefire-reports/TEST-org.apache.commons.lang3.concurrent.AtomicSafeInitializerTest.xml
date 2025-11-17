@@ -65,8 +65,8 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.concurrent.AtomicSafeInitializerTest" name="testNumberOfInitializeInvocations" time="0.008"/>
+  <testcase classname="org.apache.commons.lang3.concurrent.AtomicSafeInitializerTest" name="testNumberOfInitializeInvocations" time="0.005"/>
   <testcase classname="org.apache.commons.lang3.concurrent.AtomicSafeInitializerTest" name="testGet" time="0"/>
-  <testcase classname="org.apache.commons.lang3.concurrent.AtomicSafeInitializerTest" name="testGetConcurrent" time="0.003"/>
+  <testcase classname="org.apache.commons.lang3.concurrent.AtomicSafeInitializerTest" name="testGetConcurrent" time="0.006"/>
   <testcase classname="org.apache.commons.lang3.concurrent.AtomicSafeInitializerTest" name="testGetMultipleTimes" time="0"/>
 </testsuite>

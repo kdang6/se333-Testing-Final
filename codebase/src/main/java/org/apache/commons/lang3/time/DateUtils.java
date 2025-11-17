@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.NoSuchElementException;
+import java.text.DateFormatSymbols;
 
 /**
  * <p>A suite of utilities surrounding the use of the
@@ -395,25 +396,100 @@ public class DateUtils {
             if (parsePattern.contains("EEE")) {
                 final int commaIdx = str2.indexOf(',');
                 if (commaIdx > 0) {
-                    final String firstToken = str2.substring(0, commaIdx);
                     final String rest = str2.substring(commaIdx);
-                    // Try adding a dot if not present (e.g. "Mi" -> "Mi.")
-                    if (!firstToken.endsWith(".")) {
-                        final String alt = firstToken + "." + rest;
-                        pos.setIndex(0);
-                        date = parser.parse(alt, pos);
-                        if (date != null && pos.getIndex() == alt.length()) {
-                            return date;
+                    final Locale localeUsed = (locale == null) ? Locale.getDefault() : locale;
+                    final DateFormatSymbols dfs = new DateFormatSymbols(localeUsed);
+                    final String[] shortWeekdays = dfs.getShortWeekdays();
+                    final String[] shortMonths = dfs.getShortMonths();
+                    System.err.println("DEBUG parseDateWithLeniency: shortMonths=" + java.util.Arrays.toString(shortMonths));
+                        System.err.println("DEBUG parseDateWithLeniency: localeUsed=" + localeUsed + " pattern=" + pattern + " input=" + str2);
+                        System.err.println("DEBUG parseDateWithLeniency: shortWeekdays=" + java.util.Arrays.toString(shortWeekdays));
+                    // Try replacing the weekday token with locale-specific short names
+                    for (int i = 1; i < shortWeekdays.length; i++) {
+                        final String wd = shortWeekdays[i];
+                        if (wd == null || wd.length() == 0) {
+                            continue;
+                        }
+                        final String cand = wd;
+                        final String candStripped = cand.endsWith(".") ? cand.substring(0, cand.length() - 1) : cand;
+                        final String[] tries = new String[] { cand, cand + ".", candStripped };
+                        for (final String t : tries) {
+                            if (t == null || t.length() == 0) {
+                                continue;
+                            }
+                            final String alt = t + rest;
+                            System.err.println("DEBUG parseDateWithLeniency: trying alt='" + alt + "' with pattern='" + pattern + "'");
+                            pos.setIndex(0);
+                            date = parser.parse(alt, pos);
+                            if (date != null && pos.getIndex() == alt.length()) {
+                                System.err.println("DEBUG parseDateWithLeniency: success alt='" + alt + "'");
+                                return date;
+                            }
                         }
                     }
-                    // Try removing a dot if present (e.g. "Mi." -> "Mi")
-                    if (firstToken.endsWith(".")) {
-                        final String stripped = firstToken.substring(0, firstToken.length() - 1) + rest;
-                        pos.setIndex(0);
-                        date = parser.parse(stripped, pos);
-                        if (date != null && pos.getIndex() == stripped.length()) {
-                            return date;
+                        // Some locales use month abbreviations with a trailing dot (e.g., "Apr.").
+                        // Try normalizing those by removing the dot in the input and re-parsing.
+                        if (parsePattern.contains("MMM")) {
+                            final Locale localeForMonths = (locale == null) ? Locale.getDefault() : locale;
+                            final DateFormatSymbols dfsMonths = new DateFormatSymbols(localeForMonths);
+                            final String[] months = dfsMonths.getShortMonths();
+                            for (final String m : months) {
+                                if (m == null || m.length() == 0) {
+                                    continue;
+                                }
+                                if (m.endsWith(".")) {
+                                    final String mStripped = m.substring(0, m.length() - 1);
+                                    final String alt = str2.replace(m, mStripped);
+                                    System.err.println("DEBUG parseDateWithLeniency: trying month-normalized alt='" + alt + "' pattern='" + pattern + "'");
+                                    pos.setIndex(0);
+                                    final Date d = parser.parse(alt, pos);
+                                    if (d != null && pos.getIndex() == alt.length()) {
+                                        System.err.println("DEBUG parseDateWithLeniency: success month-normalized alt='" + alt + "'");
+                                        return d;
+                                    }
+                                    // Also try adding the dot if the input doesn't have it (e.g., 'Apr' -> 'Apr.')
+                                    final String altAdd = str2.replace(mStripped, m);
+                                    if (!altAdd.equals(alt)) {
+                                        System.err.println("DEBUG parseDateWithLeniency: trying month-normalized altAdd='" + altAdd + "' pattern='" + pattern + "'");
+                                        pos.setIndex(0);
+                                        final Date d2 = parser.parse(altAdd, pos);
+                                        if (d2 != null && pos.getIndex() == altAdd.length()) {
+                                            System.err.println("DEBUG parseDateWithLeniency: success month-normalized altAdd='" + altAdd + "'");
+                                            return d2;
+                                        }
+                                    }
+                                }
+                            }
                         }
+                }
+            }
+
+            // As a last resort, if pattern includes a weekday (EEE) try parsing without the weekday
+            if (parsePattern.contains("EEE")) {
+                final int commaIdx = str2.indexOf(',');
+                if (commaIdx > 0 && commaIdx < str2.length() - 1) {
+                    final String rest = str2.substring(commaIdx + 1).trim();
+                    final String patternNoWeekday = pattern.replaceFirst("EEE\\s*,?\\s*", "");
+                    System.err.println("DEBUG parseDateWithLeniency: trying without weekday: rest='" + rest + "' pattern='" + patternNoWeekday + "'");
+                    parser.applyPattern(patternNoWeekday);
+                    pos.setIndex(0);
+                    final Date d = parser.parse(rest, pos);
+                    if (d != null && pos.getIndex() == rest.length()) {
+                        System.err.println("DEBUG parseDateWithLeniency: success without weekday rest='" + rest + "'");
+                        return d;
+                    }
+                    // Also try parsing the rest with an English parser as a fallback
+                    try {
+                        final SimpleDateFormat enParser = new SimpleDateFormat(patternNoWeekday, Locale.ENGLISH);
+                        enParser.setLenient(lenient);
+                        final ParsePosition pos2 = new ParsePosition(0);
+                        final Date d2 = enParser.parse(rest, pos2);
+                        if (d2 != null && pos2.getIndex() == rest.length()) {
+                            System.err.println("DEBUG parseDateWithLeniency: success without weekday using English parser rest='" + rest + "'");
+                            return d2;
+                        }
+                    } catch (final Exception e) {
+                        // ignore
                     }
                 }
             }

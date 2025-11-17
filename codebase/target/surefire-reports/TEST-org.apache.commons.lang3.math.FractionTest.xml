@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="25" failures="0" name="org.apache.commons.lang3.math.FractionTest" time="0.045" errors="0" skipped="0">
+<testsuite tests="25" failures="0" name="org.apache.commons.lang3.math.FractionTest" time="0.053" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -65,19 +65,19 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testConversions" time="0.002"/>
+  <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testConversions" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testReducedFactory_int_int" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testAbs" time="0"/>
-  <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testAdd" time="0.006"/>
+  <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testAdd" time="0.008"/>
   <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testPow" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testSubtract" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testGets" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testToString" time="0"/>
-  <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testFactory_String" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testFactory_String" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testFactory_int_int_int" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testCompareTo" time="0"/>
-  <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testFactory_double" time="0.035"/>
-  <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testFactory_String_improper" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testFactory_double" time="0.045"/>
+  <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testFactory_String_improper" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testConstants" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testToProperString" time="0"/>
   <testcase classname="org.apache.commons.lang3.math.FractionTest" name="testHashCode" time="0"/>
