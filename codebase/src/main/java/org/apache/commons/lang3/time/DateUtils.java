@@ -392,41 +392,56 @@ public class DateUtils {
             // (for example "Mi." for German Wednesday). Try a tolerant parse by
             // adding or removing a dot after the weekday token before the comma.
             // Only attempt this if the pattern contains a weekday token 'EEE' and
-            // the input contains a comma following the weekday.
+            // the input contains a comma following the weekday. To avoid being
+            // overly permissive (accepting a weekday from a different locale),
+            // only try weekday substitution and the 'without weekday' fallback
+            // when the weekday token in the input matches one of the locale's
+            // short weekday names (or their stripped-dot form).
             if (parsePattern.contains("EEE")) {
                 final int commaIdx = str2.indexOf(',');
                 if (commaIdx > 0) {
+                    final String weekdayToken = str2.substring(0, commaIdx).trim();
                     final String rest = str2.substring(commaIdx);
                     final Locale localeUsed = (locale == null) ? Locale.getDefault() : locale;
                     final DateFormatSymbols dfs = new DateFormatSymbols(localeUsed);
                     final String[] shortWeekdays = dfs.getShortWeekdays();
-                    final String[] shortMonths = dfs.getShortMonths();
-                    System.err.println("DEBUG parseDateWithLeniency: shortMonths=" + java.util.Arrays.toString(shortMonths));
-                        System.err.println("DEBUG parseDateWithLeniency: localeUsed=" + localeUsed + " pattern=" + pattern + " input=" + str2);
-                        System.err.println("DEBUG parseDateWithLeniency: shortWeekdays=" + java.util.Arrays.toString(shortWeekdays));
-                    // Try replacing the weekday token with locale-specific short names
-                    for (int i = 1; i < shortWeekdays.length; i++) {
+                    
+
+                    // Determine if the weekdayToken appears to belong to this locale.
+                    boolean weekdayMatchesLocale = false;
+                    for (int i = 1; i < shortWeekdays.length && !weekdayMatchesLocale; i++) {
                         final String wd = shortWeekdays[i];
                         if (wd == null || wd.length() == 0) {
                             continue;
                         }
-                        final String cand = wd;
-                        final String candStripped = cand.endsWith(".") ? cand.substring(0, cand.length() - 1) : cand;
-                        final String[] tries = new String[] { cand, cand + ".", candStripped };
-                        for (final String t : tries) {
-                            if (t == null || t.length() == 0) {
-                                continue;
-                            }
-                            final String alt = t + rest;
-                            System.err.println("DEBUG parseDateWithLeniency: trying alt='" + alt + "' with pattern='" + pattern + "'");
-                            pos.setIndex(0);
-                            date = parser.parse(alt, pos);
-                            if (date != null && pos.getIndex() == alt.length()) {
-                                System.err.println("DEBUG parseDateWithLeniency: success alt='" + alt + "'");
-                                return date;
-                            }
+                        final String wdStripped = wd.endsWith(".") ? wd.substring(0, wd.length() - 1) : wd;
+                        if (weekdayToken.equalsIgnoreCase(wd) || weekdayToken.equalsIgnoreCase(wdStripped)) {
+                            weekdayMatchesLocale = true;
                         }
                     }
+
+                    if (weekdayMatchesLocale) {
+                        // Try replacing the weekday token with locale-specific short names
+                        for (int i = 1; i < shortWeekdays.length; i++) {
+                            final String wd = shortWeekdays[i];
+                            if (wd == null || wd.length() == 0) {
+                                continue;
+                            }
+                            final String cand = wd;
+                            final String candStripped = cand.endsWith(".") ? cand.substring(0, cand.length() - 1) : cand;
+                            final String[] tries = new String[] { cand, cand + ".", candStripped };
+                                for (final String t : tries) {
+                                if (t == null || t.length() == 0) {
+                                    continue;
+                                }
+                                final String alt = t + rest;
+                                pos.setIndex(0);
+                                date = parser.parse(alt, pos);
+                                if (date != null && pos.getIndex() == alt.length()) {
+                                    return date;
+                                }
+                            }
+                        }
                         // Some locales use month abbreviations with a trailing dot (e.g., "Apr.").
                         // Try normalizing those by removing the dot in the input and re-parsing.
                         if (parsePattern.contains("MMM")) {
@@ -440,27 +455,26 @@ public class DateUtils {
                                 if (m.endsWith(".")) {
                                     final String mStripped = m.substring(0, m.length() - 1);
                                     final String alt = str2.replace(m, mStripped);
-                                    System.err.println("DEBUG parseDateWithLeniency: trying month-normalized alt='" + alt + "' pattern='" + pattern + "'");
                                     pos.setIndex(0);
                                     final Date d = parser.parse(alt, pos);
                                     if (d != null && pos.getIndex() == alt.length()) {
-                                        System.err.println("DEBUG parseDateWithLeniency: success month-normalized alt='" + alt + "'");
                                         return d;
                                     }
                                     // Also try adding the dot if the input doesn't have it (e.g., 'Apr' -> 'Apr.')
                                     final String altAdd = str2.replace(mStripped, m);
                                     if (!altAdd.equals(alt)) {
-                                        System.err.println("DEBUG parseDateWithLeniency: trying month-normalized altAdd='" + altAdd + "' pattern='" + pattern + "'");
                                         pos.setIndex(0);
                                         final Date d2 = parser.parse(altAdd, pos);
                                         if (d2 != null && pos.getIndex() == altAdd.length()) {
-                                            System.err.println("DEBUG parseDateWithLeniency: success month-normalized altAdd='" + altAdd + "'");
                                             return d2;
                                         }
                                     }
                                 }
                             }
                         }
+                    } else {
+                        // weekday token does not match locale; skip fallbacks
+                    }
                 }
             }
 
@@ -468,28 +482,47 @@ public class DateUtils {
             if (parsePattern.contains("EEE")) {
                 final int commaIdx = str2.indexOf(',');
                 if (commaIdx > 0 && commaIdx < str2.length() - 1) {
+                    final String weekdayToken = str2.substring(0, commaIdx).trim();
                     final String rest = str2.substring(commaIdx + 1).trim();
-                    final String patternNoWeekday = pattern.replaceFirst("EEE\\s*,?\\s*", "");
-                    System.err.println("DEBUG parseDateWithLeniency: trying without weekday: rest='" + rest + "' pattern='" + patternNoWeekday + "'");
-                    parser.applyPattern(patternNoWeekday);
-                    pos.setIndex(0);
-                    final Date d = parser.parse(rest, pos);
-                    if (d != null && pos.getIndex() == rest.length()) {
-                        System.err.println("DEBUG parseDateWithLeniency: success without weekday rest='" + rest + "'");
-                        return d;
-                    }
-                    // Also try parsing the rest with an English parser as a fallback
-                    try {
-                        final SimpleDateFormat enParser = new SimpleDateFormat(patternNoWeekday, Locale.ENGLISH);
-                        enParser.setLenient(lenient);
-                        final ParsePosition pos2 = new ParsePosition(0);
-                        final Date d2 = enParser.parse(rest, pos2);
-                        if (d2 != null && pos2.getIndex() == rest.length()) {
-                            System.err.println("DEBUG parseDateWithLeniency: success without weekday using English parser rest='" + rest + "'");
-                            return d2;
+                    final Locale localeUsed = (locale == null) ? Locale.getDefault() : locale;
+                    final DateFormatSymbols dfs = new DateFormatSymbols(localeUsed);
+                    final String[] shortWeekdays = dfs.getShortWeekdays();
+
+                    // Only try removing the weekday when the token matches the locale's weekday names
+                    boolean weekdayMatchesLocale = false;
+                    for (int i = 1; i < shortWeekdays.length && !weekdayMatchesLocale; i++) {
+                        final String wd = shortWeekdays[i];
+                        if (wd == null || wd.length() == 0) {
+                            continue;
                         }
-                    } catch (final Exception e) {
-                        // ignore
+                        final String wdStripped = wd.endsWith(".") ? wd.substring(0, wd.length() - 1) : wd;
+                        if (weekdayToken.equalsIgnoreCase(wd) || weekdayToken.equalsIgnoreCase(wdStripped)) {
+                            weekdayMatchesLocale = true;
+                        }
+                    }
+
+                    if (weekdayMatchesLocale) {
+                        final String patternNoWeekday = pattern.replaceFirst("EEE\\s*,?\\s*", "");
+                        parser.applyPattern(patternNoWeekday);
+                        pos.setIndex(0);
+                        final Date d = parser.parse(rest, pos);
+                        if (d != null && pos.getIndex() == rest.length()) {
+                            return d;
+                        }
+                        // Also try parsing the rest with an English parser as a fallback
+                        try {
+                            final SimpleDateFormat enParser = new SimpleDateFormat(patternNoWeekday, Locale.ENGLISH);
+                            enParser.setLenient(lenient);
+                            final ParsePosition pos2 = new ParsePosition(0);
+                            final Date d2 = enParser.parse(rest, pos2);
+                            if (d2 != null && pos2.getIndex() == rest.length()) {
+                                return d2;
+                            }
+                        } catch (final Exception e) {
+                            // ignore
+                        }
+                    } else {
+                        // weekday token does not match locale; skip without-weekday fallback
                     }
                 }
             }
