@@ -464,20 +464,47 @@ public class NumberUtils {
             }
         }
         if (pfxLen > 0) { // we have a hex number
-            final int hexDigits = str.length() - pfxLen;
-            if (hexDigits > 16) { // too many for Long
+            final String digits = str.substring(pfxLen);
+            // Trim leading zeros when counting significant hex digits (leading zeros shouldn't force a wider type)
+            final String sigDigits = digits.replaceFirst("^0+(?=[0-9A-Fa-f])", "");
+            final int sigLen = sigDigits.length() == 0 ? 1 : sigDigits.length();
+            if (sigLen > 16) { // too many for Long
                 return createBigInteger(str);
             }
-            if (hexDigits > 8) { // too many for an int
-                return createLong(str);
-            }
-            if (hexDigits == 8) {
-                // 8 hex digits may overflow Integer if the high bit is set (e.g. 0x80000000).
-                // Try to create an Integer first and fall back to Long on overflow.
+            if (sigLen > 8) { // too many for an int
                 try {
-                    return createInteger(str);
-                } catch (final NumberFormatException ex) {
                     return createLong(str);
+                } catch (final NumberFormatException nfe) {
+                    return createBigInteger(str);
+                }
+            }
+            if (sigLen == 8) {
+                // 8 significant hex digits may overflow Integer if the high bit is set (e.g. 0x80000000).
+                // Parse as BigInteger and choose Integer if it fits, otherwise use Long.
+                final boolean negative = str.startsWith("-");
+                System.err.println("DEBUG createNumber: str=" + str + " pfxLen=" + pfxLen + " sigLen=" + sigLen + " digits=" + digits);
+                final BigInteger value = new BigInteger(digits, 16);
+                final BigInteger intMax = BigInteger.valueOf(Integer.MAX_VALUE);
+                System.err.println("DEBUG createNumber: value=" + value + " intMax=" + intMax + " cmp=" + value.compareTo(intMax));
+                // For signed interpretation: if value <= Integer.MAX_VALUE then return Integer
+                if (!negative) {
+                    if (value.compareTo(intMax) <= 0) {
+                        System.err.println("DEBUG createNumber: returning Integer for " + str);
+                        return Integer.valueOf(value.intValue());
+                    }
+                } else {
+                    // negative hex form like -0x80000000: value is magnitude; convert to negative
+                    final BigInteger negValue = value.negate();
+                    if (negValue.compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) >= 0) {
+                        System.err.println("DEBUG createNumber: returning Integer (negative) for " + str);
+                        return Integer.valueOf(negValue.intValue());
+                    }
+                }
+                System.err.println("DEBUG createNumber: returning Long for " + str);
+                try {
+                    return createLong(str);
+                } catch (final NumberFormatException nfe) { // fallback to BigInteger when too large for Long
+                    return createBigInteger(str);
                 }
             }
             return createInteger(str);

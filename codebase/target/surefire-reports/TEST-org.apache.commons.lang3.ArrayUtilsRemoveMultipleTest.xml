@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="55" failures="0" name="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" time="0.001" errors="0" skipped="0">
+<testsuite tests="55" failures="0" name="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" time="0.007" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -90,7 +90,7 @@
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllCharArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllFloatArrayOutOfBoundsIndex" time="0"/>
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllShortArray" time="0"/>
-  <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllNullBooleanArray" time="0"/>
+  <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllNullBooleanArray" time="0.004"/>
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllNullIntArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveElementFloatArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllFloatArrayRemoveNone" time="0"/>
@@ -115,8 +115,8 @@
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllFloatArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllObjectArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllIntArrayNegativeIndex" time="0"/>
-  <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllDoubleArrayNegativeIndex" time="0"/>
-  <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveElementDoubleArray" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllDoubleArrayNegativeIndex" time="0.003"/>
+  <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveElementDoubleArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllNullCharArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveElementShortArray" time="0"/>
   <testcase classname="org.apache.commons.lang3.ArrayUtilsRemoveMultipleTest" name="testRemoveAllLongArray" time="0"/>

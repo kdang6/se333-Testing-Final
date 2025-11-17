@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="14" failures="0" name="org.apache.commons.lang3.LocaleUtilsTest" time="0.035" errors="0" skipped="0">
+<testsuite tests="14" failures="0" name="org.apache.commons.lang3.LocaleUtilsTest" time="0.039" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -65,12 +65,12 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testAvailableLocaleSet" time="0.031"/>
+  <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testAvailableLocaleSet" time="0.027"/>
   <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testIsAvailableLocale" time="0"/>
-  <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testAvailableLocaleList" time="0.003"/>
+  <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testAvailableLocaleList" time="0.011"/>
   <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testLang328" time="0"/>
-  <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testLang865" time="0"/>
-  <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testCountriesByLanguage" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testLang865" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testCountriesByLanguage" time="0"/>
   <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testParseAllLocales" time="0"/>
   <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testLocaleLookupList_LocaleLocale" time="0"/>
   <testcase classname="org.apache.commons.lang3.LocaleUtilsTest" name="testLanguagesByCountry" time="0"/>

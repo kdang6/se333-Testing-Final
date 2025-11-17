@@ -1,12 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: org.apache.commons.lang3.math.NumberUtilsTest
 -------------------------------------------------------------------------------
-Tests run: 82, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.015 sec <<< FAILURE!
-TestLang747(org.apache.commons.lang3.math.NumberUtilsTest)  Time elapsed: 0.006 sec  <<< FAILURE!
-java.lang.AssertionError: expected: java.lang.Integer<2147483647> but was: java.lang.Long<2147483647>
-	at org.junit.Assert.fail(Assert.java:88)
-	at org.junit.Assert.failNotEquals(Assert.java:743)
-	at org.junit.Assert.assertEquals(Assert.java:118)
-	at org.junit.Assert.assertEquals(Assert.java:144)
-	at org.apache.commons.lang3.math.NumberUtilsTest.TestLang747(NumberUtilsTest.java:261)
-
+Tests run: 82, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.014 sec

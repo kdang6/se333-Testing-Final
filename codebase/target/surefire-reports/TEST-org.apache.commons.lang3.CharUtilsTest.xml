@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="23" failures="0" name="org.apache.commons.lang3.CharUtilsTest" time="0.001" errors="0" skipped="0">
+<testsuite tests="23" failures="0" name="org.apache.commons.lang3.CharUtilsTest" time="0.006" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -65,7 +65,7 @@
     <property name="sun.stdout.encoding" value="cp437"/>
     <property name="sun.cpu.isalist" value="amd64"/>
   </properties>
-  <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testIsAscii_char" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testIsAscii_char" time="0"/>
   <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testToString_Character" time="0"/>
   <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testIsAsciiAlphanumeric_char" time="0"/>
   <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testToChar_Character" time="0"/>
@@ -76,7 +76,7 @@
   <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testIsAsciiNumeric_char" time="0"/>
   <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testToIntValue_Character" time="0"/>
   <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testToChar_String_char" time="0"/>
-  <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testToString_char" time="0"/>
+  <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testToString_char" time="0.006"/>
   <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testIsAsciiPrintable_char" time="0"/>
   <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testToIntValue_char_int" time="0"/>
   <testcase classname="org.apache.commons.lang3.CharUtilsTest" name="testIsAsciiControl_char" time="0"/>

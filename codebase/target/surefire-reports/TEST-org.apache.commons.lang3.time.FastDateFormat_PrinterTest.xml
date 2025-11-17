@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="14" failures="0" name="org.apache.commons.lang3.time.FastDateFormat_PrinterTest" time="0.001" errors="0" skipped="0">
+<testsuite tests="14" failures="0" name="org.apache.commons.lang3.time.FastDateFormat_PrinterTest" time="0" errors="0" skipped="0">
   <properties>
     <property name="jansi.mode" value="strip"/>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
@@ -76,7 +76,7 @@
   <testcase classname="org.apache.commons.lang3.time.FastDateFormat_PrinterTest" name="testLang645" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.FastDateFormat_PrinterTest" name="testToStringContainsName" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.FastDateFormat_PrinterTest" name="testEquals" time="0"/>
-  <testcase classname="org.apache.commons.lang3.time.FastDateFormat_PrinterTest" name="testFormat" time="0.001"/>
+  <testcase classname="org.apache.commons.lang3.time.FastDateFormat_PrinterTest" name="testFormat" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.FastDateFormat_PrinterTest" name="testTimeZoneMatches" time="0"/>
   <testcase classname="org.apache.commons.lang3.time.FastDateFormat_PrinterTest" name="testPatternMatches" time="0"/>
 </testsuite>
